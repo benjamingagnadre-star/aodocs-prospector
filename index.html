@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AODocs Prospector</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f0f2f7;--white:#fff;--s2:#f8f9fb;--border:#e3e7ef;--bl:#edf0f7;
+    --accent:#1a6ff0;--ad:#1457c8;--al:#e8f0fe;
+    --text:#1a1d27;--tm:#6b7280;--tl:#9ca3af;
+    --ok:#059669;--ok-bg:#ecfdf5;--warn:#d97706;--warn-bg:#fffbeb;
+    --err:#dc2626;--err-bg:#fef2f2;--pur-bg:#f5f3ff;
+    --r:12px;--rs:8px;
+    --sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+    --sh2:0 4px 16px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
+    --sh3:0 12px 40px rgba(0,0,0,.12),0 4px 12px rgba(0,0,0,.06);
+    --sw:248px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .app{display:flex;min-height:100vh;}
+
+  /* SIDEBAR */
+  .sidebar{width:var(--sw);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;height:100vh;top:0;left:0;z-index:100;box-shadow:2px 0 8px rgba(0,0,0,.04);}
+  .slogo{padding:16px 18px 12px;border-bottom:1px solid var(--bl);}
+  .slogo img{height:24px;display:block;}
+  .slogo-tag{font-size:9px;font-weight:700;color:var(--tm);letter-spacing:1.2px;text-transform:uppercase;margin-top:4px;}
+  .nav{padding:8px 8px;flex:1;overflow-y:auto;}
+  .nav-sec{font-size:9px;font-weight:700;color:var(--tl);letter-spacing:1px;text-transform:uppercase;padding:10px 8px 4px;}
+  .ni{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--rs);cursor:pointer;color:var(--tm);font-size:13px;font-weight:500;transition:all .12s;margin-bottom:1px;}
+  .ni:hover{background:var(--s2);color:var(--text);}
+  .ni.active{background:var(--al);color:var(--accent);}
+  .nbadge{margin-left:auto;background:var(--accent);color:white;font-size:9px;font-weight:700;padding:1px 5px;border-radius:10px;min-width:16px;text-align:center;}
+  .nbadge.w{background:var(--warn);}
+  .sbot{padding:10px 12px 12px;border-top:1px solid var(--bl);background:var(--s2);}
+  .albl{font-size:9px;font-weight:700;color:var(--tm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;margin-top:8px;}
+  .albl:first-child{margin-top:0;}
+  .awrap{position:relative;}
+  .ainput{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:5px;padding:6px 32px 6px 8px;color:var(--text);font-size:10.5px;font-family:monospace;outline:none;transition:border-color .15s;}
+  .ainput:focus{border-color:var(--accent);}
+  .asave{position:absolute;right:2px;top:50%;transform:translateY(-50%);background:var(--accent);border:none;border-radius:3px;color:white;font-size:9px;font-weight:700;padding:3px 6px;cursor:pointer;}
+  .asave:hover{background:var(--ad);}
+  .astat{font-size:10px;margin-top:3px;font-weight:500;}
+  .astat.ok{color:var(--ok);}
+  .astat.bad{color:var(--err);}
+
+  /* MAIN */
+  .main{margin-left:var(--sw);flex:1;}
+  .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:var(--sh);}
+  .tb-title{font-size:15px;font-weight:800;}
+  .tb-sub{font-size:11px;color:var(--tm);margin-top:1px;}
+  .page{display:none;padding:22px 28px 48px;}
+  .page.active{display:block;}
+
+  /* CARDS */
+  .card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:14px;box-shadow:var(--sh);}
+  .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .ct{font-size:12.5px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px;}
+  .ci{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;}
+  .ci-b{background:var(--al);}
+  .ci-g{background:var(--ok-bg);}
+  .ci-v{background:var(--pur-bg);}
+  .ci-o{background:var(--warn-bg);}
+  .ci-r{background:var(--err-bg);}
+
+  /* TABS */
+  .tabs{display:flex;background:var(--s2);padding:3px;border-radius:var(--rs);margin-bottom:16px;border:1px solid var(--bl);gap:2px;}
+  .tab{flex:1;padding:7px 12px;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:500;color:var(--tm);border:none;background:transparent;transition:all .15s;text-align:center;}
+  .tab.active{background:var(--white);color:var(--accent);font-weight:600;box-shadow:var(--sh);border:1px solid var(--bl);}
+
+  /* FORMS */
+  .fg{display:flex;flex-direction:column;gap:4px;}
+  .fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .fg.full{grid-column:1/-1;}
+  label{font-size:11px;font-weight:600;color:var(--tm);}
+  input,textarea,select{background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:8px 11px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s;width:100%;}
+  input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,111,240,.1);}
+  input::placeholder,textarea::placeholder{color:var(--tl);}
+  textarea{resize:vertical;min-height:80px;line-height:1.6;}
+
+  /* BUTTONS */
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;border:1.5px solid transparent;transition:all .13s;white-space:nowrap;}
+  .btn-p{background:var(--accent);color:white;border-color:var(--accent);}
+  .btn-p:hover{background:var(--ad);box-shadow:0 4px 12px rgba(26,111,240,.3);transform:translateY(-1px);}
+  .btn-s{background:var(--white);color:var(--text);border-color:var(--border);}
+  .btn-s:hover{background:var(--s2);border-color:var(--accent);color:var(--accent);}
+  .btn-ok{background:var(--ok-bg);color:var(--ok);border-color:rgba(5,150,105,.25);}
+  .btn-ok:hover{background:#d1fae5;}
+  .btn-d{background:var(--err-bg);color:var(--err);border-color:rgba(220,38,38,.2);}
+  .btn-d:hover{background:#fee2e2;}
+  .btn-gmail{background:#ea4335;color:white;border-color:#ea4335;}
+  .btn-gmail:hover{background:#c0392b;box-shadow:0 4px 12px rgba(234,67,53,.3);transform:translateY(-1px);}
+  .btn-cal{background:#1a73e8;color:white;border-color:#1a73e8;}
+  .btn-cal:hover{background:#1557b0;box-shadow:0 4px 12px rgba(26,115,232,.3);transform:translateY(-1px);}
+  .btn-g{background:transparent;color:var(--tm);border-color:transparent;}
+  .btn-g:hover{background:var(--s2);color:var(--text);}
+  .btn-sm{padding:5px 11px;font-size:12px;border-radius:5px;}
+  .btn-xs{padding:3px 8px;font-size:11px;border-radius:4px;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+  .btn-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:14px;}
+
+  .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+  .spinner-b{border-color:rgba(26,111,240,.2);border-top-color:var(--accent);}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* SEQ PILLS */
+  .sp-wrap{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
+  .sp{padding:5px 12px;border-radius:20px;font-size:11.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--white);color:var(--tm);transition:all .13s;}
+  .sp:hover{border-color:var(--accent);color:var(--accent);}
+  .sp.active{background:var(--accent);border-color:var(--accent);color:white;}
+
+  /* EMAIL PREVIEW */
+  .ep{border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--white);box-shadow:var(--sh);}
+  .ep-top{background:var(--s2);padding:8px 14px;border-bottom:1px solid var(--border);display:flex;gap:5px;align-items:center;}
+  .ep-dot{width:10px;height:10px;border-radius:50%;}
+  .ep-meta{padding:11px 18px;border-bottom:1px solid var(--bl);display:flex;flex-direction:column;gap:4px;}
+  .ep-row{display:flex;gap:8px;font-size:12.5px;}
+  .ep-lbl{color:var(--tm);min-width:48px;font-weight:500;}
+  .ep-val{color:var(--text);outline:none;flex:1;border-radius:3px;padding:1px 3px;}
+  .ep-val:focus{background:var(--al);}
+  .ep-body{padding:16px 20px;font-size:13.5px;line-height:1.85;color:var(--text);white-space:pre-wrap;min-height:160px;outline:none;}
+  .ep-body:focus{background:#fafbff;}
+  .ep-bar{padding:8px 14px;border-top:1px solid var(--bl);background:var(--s2);display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+  .ep-track{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--tm);background:var(--white);border:1px solid var(--border);padding:3px 9px;border-radius:20px;}
+
+  /* STATS */
+  .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+  .sc{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);display:flex;align-items:center;gap:13px;}
+  .si{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .sn{font-size:26px;font-weight:800;line-height:1;}
+  .sl{font-size:11px;color:var(--tm);margin-top:2px;font-weight:500;}
+
+  /* TABLE */
+  .tw{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:left;padding:9px 13px;font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);background:var(--s2);}
+  td{padding:10px 13px;border-bottom:1px solid var(--bl);vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  tbody tr:hover td{background:#fafbff;}
+
+  /* BADGES */
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;}
+  .bdot{width:5px;height:5px;border-radius:50%;}
+  .b-new{background:#f3f4f6;color:#6b7280;}.b-new .bdot{background:#9ca3af;}
+  .b-sent{background:var(--al);color:var(--accent);}.b-sent .bdot{background:var(--accent);}
+  .b-opened{background:var(--ok-bg);color:var(--ok);}.b-opened .bdot{background:var(--ok);animation:blink 2s infinite;}
+  .b-pending{background:var(--warn-bg);color:var(--warn);}.b-pending .bdot{background:var(--warn);}
+  .b-replied{background:var(--pur-bg);color:#7c3aed;}.b-replied .bdot{background:#7c3aed;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+
+  /* PROGRESS */
+  .pb{height:4px;background:var(--border);border-radius:3px;overflow:hidden;}
+  .pf{height:100%;background:linear-gradient(90deg,var(--accent),#60a5fa);border-radius:3px;transition:width .5s ease;}
+
+  /* REMINDERS */
+  .ri{display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--white);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:7px;cursor:pointer;transition:all .13s;box-shadow:var(--sh);}
+  .ri:hover{border-color:var(--accent);box-shadow:var(--sh2);transform:translateY(-1px);}
+  .ri.urgent{border-left:3px solid var(--err);}
+  .ri.upcoming{border-left:3px solid var(--warn);}
+  .ri.normal{border-left:3px solid var(--accent);}
+  .av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;flex-shrink:0;}
+  .ri-info{flex:1;}
+  .ri-name{font-size:13px;font-weight:600;}
+  .ri-detail{font-size:11px;color:var(--tm);margin-top:1px;}
+  .ri-badge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+  .ri-badge.urgent{background:var(--err-bg);color:var(--err);}
+  .ri-badge.upcoming{background:var(--warn-bg);color:var(--warn);}
+  .ri-badge.normal{background:var(--al);color:var(--accent);}
+
+  /* MODAL */
+  .mo{position:fixed;inset:0;background:rgba(15,20,35,.45);backdrop-filter:blur(3px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+  .mo.open{display:flex;}
+  .modal{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:24px;width:90%;max-width:640px;max-height:88vh;overflow-y:auto;animation:slideUp .2s ease;box-shadow:var(--sh3);}
+  @keyframes slideUp{from{transform:translateY(12px);opacity:0;}}
+  .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:13px;border-bottom:1px solid var(--bl);}
+  .mt{font-size:16px;font-weight:800;}
+  .mc{background:var(--s2);border:1px solid var(--border);color:var(--tm);font-size:16px;cursor:pointer;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all .12s;}
+  .mc:hover{background:var(--border);}
+
+  /* INFO BOX */
+  .ib{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-radius:var(--rs);font-size:12px;margin-bottom:12px;}
+  .ib-b{background:var(--al);color:#1e40af;border:1px solid #bfdbfe;}
+  .ib-o{background:var(--warn-bg);color:#92400e;border:1px solid #fde68a;}
+  .ib-g{background:var(--ok-bg);color:#065f46;border:1px solid #6ee7b7;}
+  .ib-v{background:var(--pur-bg);color:#5b21b6;border:1px solid #c4b5fd;}
+  .ib svg{flex-shrink:0;margin-top:1px;}
+
+  /* PASTE ZONE */
+  .pz{border:2px dashed var(--border);border-radius:var(--r);padding:20px;text-align:center;transition:all .2s;background:var(--s2);margin-bottom:10px;}
+  .pz:focus-within{border-color:var(--accent);background:var(--al);}
+  .pz textarea{border:none!important;background:transparent!important;box-shadow:none!important;text-align:left;resize:none;min-height:100px;margin-top:8px;}
+  .pz textarea:focus{box-shadow:none!important;}
+
+  /* CALENDAR SLOTS */
+  .slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+  .slot{padding:8px 10px;background:var(--s2);border:1.5px solid var(--border);border-radius:var(--rs);font-size:12px;cursor:pointer;transition:all .13s;text-align:center;}
+  .slot:hover{border-color:var(--accent);background:var(--al);color:var(--accent);}
+  .slot.selected{background:var(--accent);border-color:var(--accent);color:white;}
+  .slot-time{font-weight:700;font-size:13px;}
+  .slot-date{font-size:10.5px;opacity:.8;margin-top:1px;}
+
+  /* REPLIES SECTION */
+  .reply-item{display:flex;gap:12px;padding:12px 14px;background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:8px;}
+  .reply-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+  .reply-content{flex:1;}
+  .reply-from{font-size:12.5px;font-weight:600;}
+  .reply-preview{font-size:12px;color:var(--tm);margin-top:2px;}
+  .reply-date{font-size:11px;color:var(--tl);margin-top:2px;}
+  .reply-badge{display:inline-flex;align-items:center;gap:4px;background:var(--pur-bg);color:#7c3aed;padding:2px 8px;border-radius:10px;font-size:10.5px;font-weight:700;margin-top:4px;}
+
+  /* CHART */
+  .chart-bar-wrap{display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:10px;}
+  .chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .chart-bar{width:100%;background:var(--accent);border-radius:4px 4px 0 0;transition:height .5s ease;min-height:2px;}
+  .chart-lbl{font-size:10px;color:var(--tm);font-weight:500;}
+
+  /* TOAST */
+  #toast{position:fixed;bottom:20px;right:20px;background:var(--text);color:white;border-radius:var(--rs);padding:10px 15px;font-size:12.5px;font-weight:500;display:flex;align-items:center;gap:8px;box-shadow:var(--sh3);transform:translateY(60px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:9999;max-width:280px;}
+  #toast.show{transform:translateY(0);opacity:1;}
+  #toast.success{background:#064e3b;}
+  #toast.error{background:#7f1d1d;}
+  #toast.info{background:#1e3a8a;}
+
+  /* EMPTY */
+  .empty{text-align:center;padding:40px 20px;color:var(--tm);}
+  .empty-ic{font-size:36px;margin-bottom:10px;}
+  .empty-t{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+  .empty-s{font-size:12.5px;}
+
+  /* AVATAR COLORS */
+  .av-b{background:linear-gradient(135deg,#3b82f6,#1d4ed8);}
+  .av-g{background:linear-gradient(135deg,#10b981,#059669);}
+  .av-v{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
+  .av-o{background:linear-gradient(135deg,#f59e0b,#d97706);}
+  .av-p{background:linear-gradient(135deg,#ec4899,#db2777);}
+  .av-t{background:linear-gradient(135deg,#14b8a6,#0d9488);}
+
+  .loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:32px 20px;color:var(--tm);font-size:13px;font-weight:500;}
+  .divider{height:1px;background:var(--bl);margin:14px 0;}
+  ::-webkit-scrollbar{width:4px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+  /* FILTER BAR */
+  .filter-bar{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;box-shadow:var(--sh);display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .filter-search{position:relative;flex:1;min-width:180px;}
+  .filter-search input{padding-left:34px;font-size:13px;}
+  .filter-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--tl);pointer-events:none;}
+  .filter-select{background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:8px 30px 8px 11px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:border-color .15s;}
+  .filter-select:focus{border-color:var(--accent);}
+  .filter-count{font-size:12px;font-weight:600;color:var(--tm);white-space:nowrap;padding:6px 12px;background:var(--s2);border-radius:20px;}
+  .filter-reset{background:none;border:none;color:var(--tl);font-size:12px;cursor:pointer;padding:6px 8px;border-radius:5px;font-family:'Inter',sans-serif;font-weight:500;transition:all .12s;}
+  .filter-reset:hover{background:var(--err-bg);color:var(--err);}
+  .sort-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:6px;border:1.5px solid var(--border);background:var(--white);color:var(--tm);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s;white-space:nowrap;}
+  .sort-btn:hover,.sort-btn.active{border-color:var(--accent);color:var(--accent);background:var(--al);}
+
+  /* SETUP MODAL */
+  .setup-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.7);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;}
+  .setup-modal{background:white;border-radius:16px;padding:36px;width:480px;max-width:90vw;box-shadow:0 24px 64px rgba(0,0,0,0.2);}
+  .setup-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px;}
+  .setup-title{font-size:20px;font-weight:700;color:#1a1d27;margin-bottom:6px;}
+  .setup-sub{font-size:13px;color:#6b7280;margin-bottom:28px;line-height:1.6;}
+  .setup-field{margin-bottom:16px;}
+  .setup-label{font-size:11px;font-weight:700;color:#374151;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;}
+  .setup-input{width:100%;border:1.5px solid #e3e7ef;border-radius:8px;padding:10px 12px;font-size:13px;font-family:monospace;outline:none;transition:border-color .15s;}
+  .setup-input:focus{border-color:#1a6ff0;}
+  .setup-hint{font-size:11px;color:#9ca3af;margin-top:4px;}
+  .setup-btn{width:100%;background:#1a6ff0;color:white;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;transition:background .15s;}
+  .setup-btn:hover{background:#1457c8;}
+  .setup-error{font-size:12px;color:#dc2626;margin-top:8px;display:none;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="slogo">
+    <img src="https://www.aodocs.com/wp-content/uploads/2024/04/aodocs.svg" alt="AODocs" onerror="this.style.display='none';document.getElementById('lf').style.display='block'">
+    <div id="lf" style="display:none;font-size:18px;font-weight:800;color:#1a6ff0">AODocs</div>
+    <div class="slogo-tag">Prospector ✦</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-sec">Navigation</div>
+    <div class="ni active" onclick="go('pg-new')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Nouveau prospect
+    </div>
+    <div class="ni" onclick="go('pg-list')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Prospects
+      <span class="nbadge" id="badge-p">0</span>
+    </div>
+    <div class="ni" onclick="go('pg-reminders')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Rappels
+      <span class="nbadge w" id="badge-r" style="display:none">0</span>
+    </div>
+    <div class="ni" onclick="go('pg-replies')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+      Réponses
+      <span class="nbadge" id="badge-rep" style="display:none;background:#7c3aed">0</span>
+    </div>
+    <div class="ni" onclick="go('pg-tracking')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Tableau de bord
+    </div>
+  </nav>
+  <div class="sbot">
+    <div class="albl">Clé API Claude</div>
+    <div class="awrap">
+      <input type="password" class="ainput" id="apiKey" placeholder="sk-ant-...">
+      <button class="asave" onclick="saveKey()">OK</button>
+    </div>
+    <div class="astat" id="apiStatus"></div>
+    <div class="albl" style="display:flex;align-items:center;gap:4px;margin-top:8px">📧 URL Apps Script</div>
+    <div class="awrap">
+      <input type="text" class="ainput" id="gasUrl" placeholder="https://script.google.com/...">
+      <button class="asave" onclick="saveGasUrl()">OK</button>
+    </div>
+    <div class="astat" id="gasStatus"></div>
+    <div class="albl" style="display:flex;align-items:center;gap:4px;margin-top:8px">📅 Google Calendar ID</div>
+    <div class="awrap">
+      <input type="text" class="ainput" id="calId" placeholder="votre@gmail.com">
+      <button class="asave" onclick="saveCalId()">OK</button>
+    </div>
+    <div class="astat" id="calStatus"></div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--bl)">
+      <button class="btn btn-s btn-sm" style="width:100%;justify-content:center" onclick="manualSync()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Synchroniser avec Google Sheet
+      </button>
+      <div style="font-size:10px;color:var(--tl);margin-top:5px;text-align:center">Sauvegarde automatique à chaque action</div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+
+<!-- PAGE: NOUVEAU PROSPECT -->
+<div class="page active" id="pg-new">
+  <div class="topbar"><div><div class="tb-title">Nouveau prospect</div><div class="tb-sub">Créez et générez une séquence email personnalisée</div></div></div>
+  <div>
+    <div class="tabs" style="margin-top:16px">
+      <button class="tab active" onclick="switchTab('manual',this)">✍️ Saisie manuelle</button>
+      <button class="tab" onclick="switchTab('linkedin',this)">🔗 Import LinkedIn</button>
+      <button class="tab" onclick="switchTab('csv',this)">📂 Import CSV</button>
+    </div>
+
+    <!-- MANUEL -->
+    <div id="tab-manual">
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ci ci-b">👤</div> Informations du prospect</div></div>
+        <div class="fg2">
+          <div class="fg"><label>Prénom *</label><input id="m-pn" placeholder="Marie"></div>
+          <div class="fg"><label>Nom *</label><input id="m-nm" placeholder="Dupont"></div>
+          <div class="fg"><label>Fonction *</label><input id="m-fn" placeholder="DSI, DAF, Responsable IT..."></div>
+          <div class="fg"><label>Email professionnel</label><input type="email" id="m-em" placeholder="marie.dupont@entreprise.fr"></div>
+          <div class="fg"><label>Entreprise *</label><input id="m-en" placeholder="Nom de l'entreprise"></div>
+          <div class="fg"><label>Secteur d'activité</label><input id="m-se" placeholder="Industrie, Finance, Santé..."></div>
+          <div class="fg full"><label>Actualité / contexte <span style="font-weight:400;color:var(--tl)">(recommandé)</span></label><textarea id="m-cx" placeholder="Transformation digitale, migration Google Workspace, croissance rapide, acquisition..."></textarea></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINKEDIN -->
+    <div id="tab-linkedin" style="display:none">
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ci ci-b">🔗</div> Coller le profil LinkedIn</div></div>
+        <div class="ib ib-b">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Sur LinkedIn : Ctrl+A pour tout sélectionner, Ctrl+C pour copier, puis Ctrl+V ici.
+        </div>
+        <div class="pz">
+          <div style="font-size:24px;margin-bottom:6px">📋</div>
+          <div style="font-size:12.5px;color:var(--tm);font-weight:500">Collez le texte du profil LinkedIn</div>
+          <div style="font-size:11px;color:var(--tl);margin-top:2px">Ctrl+V pour coller</div>
+          <textarea id="lnPaste" placeholder="Le texte apparaîtra ici..."></textarea>
+        </div>
+        <button class="btn btn-p" onclick="extractLN()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Extraire avec l'IA
+        </button>
+      </div>
+      <div id="exf" style="display:none">
+        <div class="card">
+          <div class="ch"><div class="ct"><div class="ci ci-g">✅</div> Informations extraites — vérifiez</div></div>
+          <div id="exform"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSV IMPORT -->
+    <div id="tab-csv" style="display:none">
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ci ci-b">📂</div> Import CSV</div></div>
+        <div class="ib ib-b">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Colonnes attendues (dans l'ordre) : <strong>Prénom, Nom, Fonction, Email, Entreprise, Secteur, Contexte</strong>. La première ligne doit être le header.
+        </div>
+        <div id="csv-drop" style="border:2px dashed var(--border);border-radius:var(--r);padding:28px;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:12px" 
+          onclick="document.getElementById('csv-input').click()"
+          ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='var(--al)'"
+          ondragleave="this.style.borderColor='var(--border)';this.style.background=''"
+          ondrop="handleCsvDrop(event)">
+          <div style="font-size:28px;margin-bottom:6px">📂</div>
+          <div style="font-size:13px;font-weight:600;color:var(--tm)">Glissez votre fichier CSV ici</div>
+          <div style="font-size:11px;color:var(--tl);margin-top:3px">ou cliquez pour sélectionner</div>
+          <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="handleCsvFile(this.files[0])">
+        </div>
+        <div id="csv-preview" style="display:none">
+          <div style="font-size:12px;font-weight:600;color:var(--tm);margin-bottom:8px" id="csv-count"></div>
+          <div style="max-height:200px;overflow:auto;border:1px solid var(--border);border-radius:var(--rs)">
+            <table style="width:100%;font-size:11.5px;border-collapse:collapse">
+              <thead id="csv-thead" style="background:var(--s2);position:sticky;top:0"></thead>
+              <tbody id="csv-tbody"></tbody>
+            </table>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn btn-ok" onclick="importCsvProspects()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>
+              Importer tous les prospects
+            </button>
+            <button class="btn btn-s" onclick="resetCsv()">Annuler</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GÉNÉRATION EMAIL -->
+    <div class="card">
+      <div class="ch">
+        <div class="ct"><div class="ci ci-v">✉️</div> Séquence email</div>
+      </div>
+      <!-- PILLS avec statut visuel -->
+      <div class="sp-wrap" id="seq-pills">
+        <div class="sp active" id="sp-1" onclick="selSeq(1,this)">📧 Email 1 · Prise de contact</div>
+        <div class="sp" id="sp-2" onclick="selSeq(2,this)">🔄 Email 2 · Relance J+5</div>
+        <div class="sp" id="sp-3" onclick="selSeq(3,this)">💡 Email 3 · Valeur J+10</div>
+        <div class="sp" id="sp-4" onclick="selSeq(4,this)">🏁 Email 4 · Dernier contact J+15</div>
+      </div>
+
+      <!-- BARRE DE PROGRESSION GÉNÉRATION -->
+      <div id="gen-progress" style="display:none;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:11px;color:var(--tm);font-weight:600">
+          <span id="gen-progress-label">Génération en cours...</span>
+          <span id="gen-progress-pct">0 / 4</span>
+        </div>
+        <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+          <div id="gen-progress-bar" style="height:100%;background:linear-gradient(90deg,var(--accent),#60a5fa);border-radius:3px;transition:width .4s ease;width:0%"></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <div class="gen-step" id="gst-1" style="flex:1;padding:5px;border-radius:5px;font-size:10.5px;text-align:center;background:var(--s2);color:var(--tl);border:1px solid var(--border)">Email 1</div>
+          <div class="gen-step" id="gst-2" style="flex:1;padding:5px;border-radius:5px;font-size:10.5px;text-align:center;background:var(--s2);color:var(--tl);border:1px solid var(--border)">Email 2</div>
+          <div class="gen-step" id="gst-3" style="flex:1;padding:5px;border-radius:5px;font-size:10.5px;text-align:center;background:var(--s2);color:var(--tl);border:1px solid var(--border)">Email 3</div>
+          <div class="gen-step" id="gst-4" style="flex:1;padding:5px;border-radius:5px;font-size:10.5px;text-align:center;background:var(--s2);color:var(--tl);border:1px solid var(--border)">Email 4</div>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:0;margin-bottom:14px;align-items:center">
+        <div style="display:flex;align-items:center;gap:7px;margin-right:6px">
+          <span style="font-size:11px;color:var(--tm);font-weight:600;white-space:nowrap">Ton :</span>
+          <select id="email-tone" class="filter-select" style="font-size:11.5px;padding:5px 24px 5px 9px">
+            <option value="professionnel">💼 Professionnel</option>
+            <option value="formel">🎩 Formel</option>
+            <option value="direct">⚡ Direct</option>
+            <option value="decontracte">😊 Décontracté</option>
+          </select>
+        </div>
+        <button class="btn btn-p" id="gen-btn" onclick="genEmail()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Générer cet email
+        </button>
+        <button class="btn btn-s" id="genall-btn" onclick="genAll()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Générer les 4 emails
+        </button>
+      </div>
+      <div class="loading" id="gen-loading" style="display:none">
+        <div class="spinner spinner-b"></div>Génération de l'email <span id="gen-loading-num">1</span>/4...
+      </div>
+      <!-- EMAIL PREVIEW -->
+      <div class="ep" id="ep" style="display:none">
+        <div class="ep-top">
+          <div class="ep-dot" style="background:#ff5f57"></div>
+          <div class="ep-dot" style="background:#ffbd2e"></div>
+          <div class="ep-dot" style="background:#28c840"></div>
+          <span style="font-size:10.5px;color:var(--tm);margin-left:7px">Aperçu — cliquez pour modifier</span>
+        </div>
+        <div class="ep-meta">
+          <div class="ep-row"><span class="ep-lbl">Objet</span><span class="ep-val" id="ep-subj" contenteditable="true"></span></div>
+          <div class="ep-row"><span class="ep-lbl">À</span><span class="ep-val" id="ep-to" style="color:var(--accent)"></span></div>
+        </div>
+        <!-- CALENDAR SLOTS -->
+        <div id="cal-slots-section" style="display:none;padding:12px 18px;border-bottom:1px solid var(--bl);background:#f8fbff;">
+          <div style="font-size:11.5px;font-weight:600;color:var(--tm);margin-bottom:8px;display:flex;align-items:center;gap:6px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Créneaux disponibles — sélectionnez ceux à inclure dans l'email
+          </div>
+          <div class="slots-grid" id="slots-grid"></div>
+          <button class="btn btn-s btn-sm" style="margin-top:10px" onclick="insertSlotsInEmail()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Insérer les créneaux sélectionnés
+          </button>
+        </div>
+        <div class="ep-body" id="ep-body" contenteditable="true"></div>
+        <div class="ep-bar">
+          <button class="btn btn-gmail btn-sm" onclick="sendViaGmail()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Envoyer via Gmail
+          </button>
+          <button class="btn btn-cal btn-sm" onclick="showCalSlots()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Ajouter créneaux
+          </button>
+          <button class="btn btn-s btn-sm" onclick="copyEmail()">Copier</button>
+          <button class="btn btn-ok btn-sm" onclick="saveProspect()" title="Sauvegarde le prospect et tous ses emails générés sans envoyer">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Sauvegarder sans envoyer
+          </button>
+          <div class="ep-track">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+            Tracking actif
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: PROSPECTS -->
+<div class="page" id="pg-list">
+  <div class="topbar">
+    <div><div class="tb-title">Prospects</div><div class="tb-sub">Tous vos contacts et l'avancement de leur séquence</div></div>
+    <div style="font-size:12px;color:var(--tm)" id="p-count-top"></div>
+  </div>
+  <div style="margin-top:16px">
+    <!-- BARRE DE FILTRES -->
+    <div class="filter-bar">
+      <div class="filter-search">
+        <svg class="filter-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="f-search" placeholder="Rechercher un nom, email, entreprise..." oninput="applyFilters()">
+      </div>
+      <select class="filter-select" id="f-status" onchange="applyFilters()">
+        <option value="">Tous les statuts</option>
+        <option value="new">Nouveau</option>
+        <option value="sent">En cours</option>
+        <option value="opened">Ouvert</option>
+        <option value="pending">À relancer</option>
+        <option value="replied">A répondu</option>
+      </select>
+      <select class="filter-select" id="f-entreprise" onchange="applyFilters()">
+        <option value="">Toutes les entreprises</option>
+      </select>
+      <span class="filter-count" id="f-count">0 prospect</span>
+      <button class="filter-reset" onclick="resetFilters()" title="Effacer les filtres">✕ Effacer</button>
+    </div>
+
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="tw">
+        <table>
+          <thead><tr><th>Contact</th><th>Entreprise</th><th>Fonction</th><th>Séquence</th><th>Statut</th><th>Prochain envoi</th><th></th></tr></thead>
+          <tbody id="p-tbody"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="p-empty"><div class="empty-ic">📋</div><div class="empty-t">Aucun prospect</div><div class="empty-s">Créez votre premier prospect</div></div>
+      <div class="empty" id="p-no-results" style="display:none"><div class="empty-ic">🔍</div><div class="empty-t">Aucun résultat</div><div class="empty-s">Essayez de modifier vos filtres</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: RAPPELS -->
+<div class="page" id="pg-reminders">
+  <div class="topbar"><div><div class="tb-title">Rappels</div><div class="tb-sub">Séquences en attente, triées par urgence</div></div></div>
+  <div style="margin-top:16px">
+    <div id="rem-list"></div>
+    <div class="empty" id="rem-empty" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:var(--r)">
+      <div class="empty-ic">✅</div><div class="empty-t">Tout est à jour !</div><div class="empty-s">Aucun rappel en attente.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: RÉPONSES -->
+<div class="page" id="pg-replies">
+  <div class="topbar">
+    <div><div class="tb-title">Réponses reçues</div><div class="tb-sub">Emails de prospects qui ont répondu à votre séquence</div></div>
+    <button class="btn btn-p btn-sm" onclick="checkReplies()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      Vérifier les réponses
+    </button>
+  </div>
+  <div style="margin-top:16px">
+    <div class="ib ib-v" style="margin-bottom:14px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Les réponses sont détectées via Google Apps Script en cherchant dans votre Gmail les emails des prospects. Cliquez "Vérifier" pour synchroniser.
+    </div>
+    <div id="replies-list"></div>
+    <div class="empty" id="replies-empty">
+      <div class="empty-ic">💬</div>
+      <div class="empty-t">Aucune réponse détectée</div>
+      <div class="empty-s">Cliquez "Vérifier les réponses" pour synchroniser avec Gmail</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: TABLEAU DE BORD -->
+<div class="page" id="pg-tracking">
+  <div class="topbar"><div><div class="tb-title">Tableau de bord</div><div class="tb-sub">Performances de votre prospection</div></div></div>
+  <div style="margin-top:16px">
+    <div class="sg">
+      <div class="sc"><div class="si" style="background:#eff6ff">👥</div><div><div class="sn" id="s-total">0</div><div class="sl">Prospects</div></div></div>
+      <div class="sc"><div class="si" style="background:var(--al)">📤</div><div><div class="sn" id="s-sent" style="color:var(--accent)">0</div><div class="sl">Emails envoyés</div></div></div>
+      <div class="sc"><div class="si" style="background:var(--ok-bg)">👁</div><div><div class="sn" id="s-opened" style="color:var(--ok)">0</div><div class="sl">Emails ouverts</div></div></div>
+      <div class="sc"><div class="si" style="background:var(--pur-bg)">💬</div><div><div class="sn" id="s-replied" style="color:#7c3aed">0</div><div class="sl">Réponses</div></div></div>
+    </div>
+
+    <!-- PERF PAR EMAIL -->
+    <div class="card">
+      <div class="ch"><div class="ct"><div class="ci ci-b">📊</div> Performance par email de la séquence</div></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+        <div id="perf-1" class="perf-col" style="background:var(--s2);border-radius:var(--rs);padding:12px;text-align:center"></div>
+        <div id="perf-2" class="perf-col" style="background:var(--s2);border-radius:var(--rs);padding:12px;text-align:center"></div>
+        <div id="perf-3" class="perf-col" style="background:var(--s2);border-radius:var(--rs);padding:12px;text-align:center"></div>
+        <div id="perf-4" class="perf-col" style="background:var(--s2);border-radius:var(--rs);padding:12px;text-align:center"></div>
+      </div>
+    </div>
+
+    <!-- TAUX OUVERTURE + RÉPONSE -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="card">
+        <div class="ch">
+          <div class="ct"><div class="ci ci-g">📬</div> Taux d'ouverture</div>
+          <div style="font-size:22px;font-weight:800;color:var(--ok)" id="open-rate">0%</div>
+        </div>
+        <div class="pb" style="height:7px"><div class="pf" id="open-bar" style="width:0%;background:linear-gradient(90deg,var(--ok),#34d399)"></div></div>
+      </div>
+      <div class="card">
+        <div class="ch">
+          <div class="ct"><div class="ci ci-v">💬</div> Taux de réponse</div>
+          <div style="font-size:22px;font-weight:800;color:#7c3aed" id="reply-rate">0%</div>
+        </div>
+        <div class="pb" style="height:7px"><div class="pf" id="reply-bar" style="width:0%;background:linear-gradient(90deg,#8b5cf6,#c4b5fd)"></div></div>
+      </div>
+    </div>
+
+    <!-- TABLEAU DÉTAIL -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:14px 18px 10px"><div class="ct"><div class="ci ci-o">📋</div> Suivi détaillé par prospect</div></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Contact</th><th style="text-align:center">Email 1</th><th style="text-align:center">Email 2</th><th style="text-align:center">Email 3</th><th style="text-align:center">Email 4</th><th style="text-align:center">Réponse</th></tr></thead>
+          <tbody id="t-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- MODAL PROSPECT -->
+<div class="mo" id="modal" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="mh"><div class="mt" id="modal-title"></div><button class="mc" onclick="closeModal()">✕</button></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><span id="t-icon">✓</span><span id="t-msg"></span></div>
+
+<script>
+// ===================== STATE =====================
+const AVC=['av-b','av-g','av-v','av-o','av-p','av-t'];
+let ST={prospects:[],seq:1,prospect:null,drafts:{}};
+let selectedSlots=[];
+
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyTu082npHrQCGlTAcIrVYMZ_WkPFeQY5jrAUwx9GMlWVsZAnYTLKCMwsVWjWiNCA3R/exec";
+const CLAUDE_KEY = localStorage.getItem('aodocs_key') || "";
+
+const SIGNATURE=`Bien cordialement,
+
+Benjamin Gagnadre - Account Manager
+Tél : +33 6 32 37 90 12
+benjamin.gagnadre@aodocs.com
+www.aodocs.com`;
+
+const AODOCS=`AODocs est une plateforme ECM/DMS basée sur Google Workspace. Elle structure, contrôle et automatise la gestion documentaire en finance, industrie, sciences de la vie, secteur public.
+Valeurs: remplacement drives non structurés, conformité (ISO/FDA/GDPR/SOX), workflows validation, intégration Google Workspace, audit trail, remplacement legacy (FileNet/Documentum/SharePoint), IA pour automatisation.
+Problèmes résolus: données éparpillées, manque contrôle d'accès, absence workflow validation, non-conformité, perte documents, absence d'audit trail.`;
+
+const SEQP={
+  1:"Email de prise de contact initial. Très personnalisé, accrocheur, humain, concis (150-170 mots). Focus sur 1 problème spécifique lié à la fonction. Proposer RDV 20 minutes.",
+  2:"Relance J+5, sans réponse. Rappeler le premier email en 1 phrase, apporter un angle ou chiffre clé. Court, max 120 mots.",
+  3:"Email axé valeur J+10. Cas client du secteur ou bénéfice concret. Appel à l'action clair. Max 150 mots.",
+  4:"Dernier email J+15. Direct et respectueux. Dernier contact sauf intérêt. Laisser la porte ouverte. Max 100 mots."
+};
+
+// ===================== INIT =====================
+window.onload=()=>{
+  const s=localStorage.getItem('aodocs_st');if(s)ST={...ST,...JSON.parse(s)};
+  const k=localStorage.getItem('aodocs_key');
+  if(k){document.getElementById('apiKey').value=k;setStatus('apiStatus','✓ Clé configurée','ok');}
+  document.getElementById('gasUrl').value=GAS_URL;setStatus('gasStatus','✓ URL configurée','ok');
+  const c=localStorage.getItem('aodocs_cal');
+  if(c){document.getElementById('calId').value=c;setStatus('calStatus','✓ Calendar configuré','ok');}
+  if(!k){showSetupModal();}
+  refresh();
+  loadFromSheet(); // Restaure depuis Google Sheet si localStorage vide
+};
+
+async function manualSync(){
+  const gasUrl=GAS_URL;
+  if(!gasUrl){toast('Configurez l\'URL Apps Script d\'abord','error');return;}
+  if(!ST.prospects.length){toast('Aucun prospect à synchroniser','info');return;}
+  try{
+    await callGAS({action:'syncAllProspects',prospects:ST.prospects});
+    toast(`✅ ${ST.prospects.length} prospect(s) synchronisé(s) avec Google Sheet`,'success');
+  }catch(e){toast('Erreur de sync : '+e.message,'error');}
+}
+
+function save(){
+  localStorage.setItem('aodocs_st',JSON.stringify({prospects:ST.prospects}));
+  refresh();
+  // Sync vers Google Sheet (même si 0 prospects pour gérer les suppressions)
+  callGAS({action:'syncAllProspects',prospects:ST.prospects})
+    .catch(e=>console.warn('Sync Sheet échouée:',e));
+}
+
+async function loadFromSheet(){
+  const gasUrl=GAS_URL;
+  if(!gasUrl)return;
+  // Charger depuis le Sheet uniquement si localStorage est vide
+  const local=localStorage.getItem('aodocs_st');
+  const localProspects=local?JSON.parse(local).prospects:[];
+  if(localProspects.length>0)return; // localStorage prioritaire
+  try{
+    const d=await callGAS({action:'getProspects'});
+    if(d.prospects&&d.prospects.length>0){
+      ST.prospects=d.prospects;
+      localStorage.setItem('aodocs_st',JSON.stringify({prospects:ST.prospects}));
+      refresh();
+      toast(`${d.prospects.length} prospect(s) restauré(s) depuis Google Sheet ✓`,'success');
+    }
+  }catch(e){} // Silencieux si pas de connexion
+}
+
+function refresh(){
+  document.getElementById('badge-p').textContent=ST.prospects.length;
+  const today=new Date();today.setHours(0,0,0,0);
+  const due=ST.prospects.filter(p=>{if(!p.nextReminder)return false;const d=new Date(p.nextReminder);d.setHours(0,0,0,0);return d<=today&&(p.sentEmails?.length||0)<4;}).length;
+  const br=document.getElementById('badge-r');
+  due>0?(br.textContent=due,br.style.display='inline'):br.style.display='none';
+  const replies=ST.prospects.filter(p=>p.replied).length;
+  const brep=document.getElementById('badge-rep');
+  replies>0?(brep.textContent=replies,brep.style.display='inline'):brep.style.display='none';
+}
+
+// ===================== NAV =====================
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx=['pg-new','pg-list','pg-reminders','pg-replies','pg-tracking'].indexOf(id);
+  document.querySelectorAll('.ni')[idx]?.classList.add('active');
+  if(id==='pg-list')renderProspects();
+  if(id==='pg-reminders')renderReminders();
+  if(id==='pg-replies')renderReplies();
+  if(id==='pg-tracking')renderTracking();
+}
+
+// ===================== CSV IMPORT =====================
+let csvData=[];
+
+function handleCsvDrop(e){
+  e.preventDefault();
+  document.getElementById('csv-drop').style.borderColor='var(--border)';
+  document.getElementById('csv-drop').style.background='';
+  const file=e.dataTransfer.files[0];
+  if(file&&file.name.endsWith('.csv'))handleCsvFile(file);
+  else toast('Fichier CSV uniquement','error');
+}
+
+function handleCsvFile(file){
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const lines=e.target.result.split('\n').filter(l=>l.trim());
+    if(lines.length<2){toast('CSV vide ou invalide','error');return;}
+    const sep=lines[0].includes(';')?';':',';
+    csvData=lines.slice(1).map(line=>{
+      const vals=line.split(sep).map(v=>v.trim().replace(/"/g,''));
+      return{prenom:vals[0]||'',nom:vals[1]||'',fonction:vals[2]||'',email:vals[3]||'',entreprise:vals[4]||'',secteur:vals[5]||'',contexte:vals[6]||''};
+    }).filter(p=>p.prenom||p.nom||p.email);
+    document.getElementById('csv-count').textContent=`${csvData.length} prospect(s) détecté(s)`;
+    document.getElementById('csv-thead').innerHTML='<tr>'+['Prénom','Nom','Fonction','Email','Entreprise','Secteur'].map(h=>`<th style="padding:6px 10px;text-align:left;font-size:10.5px;color:var(--tm);font-weight:700;border-bottom:1px solid var(--border)">${h}</th>`).join('')+'</tr>';
+    document.getElementById('csv-tbody').innerHTML=csvData.slice(0,10).map(p=>`<tr style="border-bottom:1px solid var(--bl)">
+      <td style="padding:5px 10px;font-size:11.5px">${esc(p.prenom)}</td><td style="padding:5px 10px;font-size:11.5px">${esc(p.nom)}</td>
+      <td style="padding:5px 10px;font-size:11.5px;color:var(--tm)">${esc(p.fonction)}</td><td style="padding:5px 10px;font-size:11.5px;color:var(--accent)">${esc(p.email)}</td>
+      <td style="padding:5px 10px;font-size:11.5px;font-weight:500">${esc(p.entreprise)}</td><td style="padding:5px 10px;font-size:11.5px;color:var(--tm)">${esc(p.secteur)}</td>
+    </tr>`).join('')+(csvData.length>10?`<tr><td colspan="6" style="padding:6px 10px;font-size:11px;color:var(--tm);text-align:center">...et ${csvData.length-10} autres</td></tr>`:'');
+    document.getElementById('csv-preview').style.display='block';
+  };
+  reader.readAsText(file,'UTF-8');
+}
+
+function importCsvProspects(){
+  if(!csvData.length){toast('Aucune donnée à importer','error');return;}
+  let imported=0;
+  csvData.forEach(p=>{
+    const existing=ST.prospects.findIndex(x=>x.email&&x.email===p.email&&p.email!=='');
+    if(existing>=0)return;
+    const now=new Date();const next=new Date(now);next.setDate(next.getDate()+5);
+    ST.prospects.push({id:Date.now()+Math.random(),...p,emails:{},sentEmails:[],openedEmails:[],replied:false,replyContent:'',currentStep:1,nextReminder:next.toISOString(),createdAt:now.toISOString(),ci:ST.prospects.length%AVC.length});
+    imported++;
+  });
+  save();renderProspects();
+  toast(`✅ ${imported} prospect(s) importé(s) !`,'success');
+  resetCsv();
+  go('pg-list');
+}
+
+function resetCsv(){
+  csvData=[];
+  document.getElementById('csv-preview').style.display='none';
+  document.getElementById('csv-input').value='';
+}
+
+function switchTab(t,el){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');
+  ['manual','linkedin','csv'].forEach(n=>{const d=document.getElementById('tab-'+n);if(d)d.style.display=t===n?'block':'none';});
+  ST.prospect=null;ST.drafts={};document.getElementById('ep').style.display='none';
+  document.getElementById('gen-progress').style.display='none';
+  updatePills();
+}
+
+function selSeq(n,el){
+  ST.seq=n;
+  document.querySelectorAll('.sp').forEach(p=>p.classList.remove('active'));el.classList.add('active');
+  if(ST.drafts[n])showEP(ST.drafts[n].subject,ST.drafts[n].body);else document.getElementById('ep').style.display='none';
+}
+
+function updatePills(){
+  for(let i=1;i<=4;i++){
+    const pill=document.getElementById('sp-'+i);if(!pill)continue;
+    const labels=['📧 Email 1 · Prise de contact','🔄 Email 2 · Relance J+5','💡 Email 3 · Valeur J+10','🏁 Email 4 · Dernier contact J+15'];
+    if(ST.drafts[i]){
+      pill.style.borderColor='var(--ok)';pill.style.color='var(--ok)';
+      pill.innerHTML=labels[i-1]+' <span style="font-size:9px;background:var(--ok-bg);color:var(--ok);padding:1px 5px;border-radius:8px;margin-left:3px">✓ Prêt</span>';
+    }else{
+      pill.style.borderColor='';pill.style.color='';
+      pill.innerHTML=labels[i-1];
+    }
+    if(ST.seq===i)pill.classList.add('active');
+  }
+}
+
+function setGenStep(i,status){
+  const el=document.getElementById('gst-'+i);if(!el)return;
+  if(status==='loading'){el.style.background='var(--al)';el.style.color='var(--accent)';el.style.borderColor='var(--accent)';el.innerHTML='<div class="spinner spinner-b" style="width:10px;height:10px;margin:0 auto"></div>';}
+  else if(status==='done'){el.style.background='var(--ok-bg)';el.style.color='var(--ok)';el.style.borderColor='var(--ok)';el.textContent='✓ Email '+i;}
+  else{el.style.background='var(--s2)';el.style.color='var(--tl)';el.style.borderColor='var(--border)';el.textContent='Email '+i;}
+}
+
+// ===================== SETTINGS =====================
+function saveKey(){
+  const k=document.getElementById('apiKey').value.trim();
+  if(!k.startsWith('sk-ant-')){setStatus('apiStatus','✗ Format invalide','bad');return;}
+  localStorage.setItem('aodocs_key',k);setStatus('apiStatus','✓ Clé sauvegardée','ok');
+  toast('Clé API sauvegardée','success');
+}
+function saveGasUrl(){
+  const u=document.getElementById('gasUrl').value.trim();
+  if(!u.startsWith('https://script.google.com/')){setStatus('gasStatus','✗ URL invalide','bad');return;}
+  localStorage.setItem('aodocs_gas',u);setStatus('gasStatus','✓ URL sauvegardée','ok');
+  toast('URL Apps Script sauvegardée','success');
+}
+function saveCalId(){
+  const c=document.getElementById('calId').value.trim();
+  localStorage.setItem('aodocs_cal',c);setStatus('calStatus','✓ Calendar configuré','ok');
+  toast('Google Calendar configuré','success');
+}
+function setStatus(id,msg,cls){const el=document.getElementById(id);el.textContent=msg;el.className='astat '+cls;}
+
+// ===================== LINKEDIN EXTRACT =====================
+async function extractLN(){
+  const text=document.getElementById('lnPaste').value.trim();
+  if(!text){toast('Collez d\'abord le profil LinkedIn','error');return;}
+  const key=CLAUDE_KEY;if(!key){toast('Configurez votre clé API Claude','error');return;}
+  const btn=event.target.closest('.btn');btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Extraction...';
+  try{
+    const r=await claude(key,`Extrait les infos de ce profil LinkedIn. Réponds UNIQUEMENT avec ce JSON sans backticks:\n{"prenom":"","nom":"","fonction":"","entreprise":"","secteur":"","email":"","contexte":""}\nContexte = résumé 2 phrases pour prospection.\n\n${text}`,500);
+    const j=JSON.parse(r);ST.prospect=j;
+    document.getElementById('exf').style.display='block';
+    document.getElementById('exform').innerHTML=`<div class="fg2">
+      <div class="fg"><label>Prénom</label><input id="e-pn" value="${esc(j.prenom)}"></div>
+      <div class="fg"><label>Nom</label><input id="e-nm" value="${esc(j.nom)}"></div>
+      <div class="fg"><label>Fonction</label><input id="e-fn" value="${esc(j.fonction)}"></div>
+      <div class="fg"><label>Email</label><input id="e-em" type="email" value="${esc(j.email)}"></div>
+      <div class="fg"><label>Entreprise</label><input id="e-en" value="${esc(j.entreprise)}"></div>
+      <div class="fg"><label>Secteur</label><input id="e-se" value="${esc(j.secteur)}"></div>
+      <div class="fg full"><label>Contexte</label><textarea id="e-cx">${esc(j.contexte)}</textarea></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-s btn-sm" onclick="syncEx()">✓ Confirmer</button></div>`;
+    toast('Profil extrait !','success');
+  }catch(e){toast('Erreur : '+e.message,'error');}
+  btn.disabled=false;btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Extraire avec l\'IA';
+}
+function syncEx(){ST.prospect={prenom:v('e-pn'),nom:v('e-nm'),fonction:v('e-fn'),email:v('e-em'),entreprise:v('e-en'),secteur:v('e-se'),contexte:v('e-cx')};toast('Informations confirmées','success');}
+function getManual(){return{prenom:v('m-pn'),nom:v('m-nm'),fonction:v('m-fn'),email:v('m-em'),entreprise:v('m-en'),secteur:v('m-se'),contexte:v('m-cx')};}
+
+// ===================== EMAIL GENERATION =====================
+async function genEmail(){
+  const isM=document.getElementById('tab-manual').style.display!=='none';
+  if(isM)ST.prospect=getManual();else if(document.getElementById('exf').style.display!=='none')syncEx();
+  const p=ST.prospect;
+  if(!p||(!p.prenom&&!p.nom&&!p.entreprise)){toast('Renseignez au moins le nom ou l\'entreprise','error');return;}
+  const key=CLAUDE_KEY;if(!key){toast('Configurez votre clé API Claude','error');return;}
+  document.getElementById('ep').style.display='none';
+  document.getElementById('gen-loading').style.display='flex';
+  document.getElementById('gen-loading-num').textContent=ST.seq;
+  document.getElementById('gen-btn').disabled=true;
+  document.getElementById('genall-btn').disabled=true;
+  const toneMap={professionnel:'professionnel et humain',formel:'très formel et soutenu',direct:'direct et percutant, aller droit au but',decontracte:'décontracté et chaleureux, presque conversationnel'};
+  const tone=toneMap[document.getElementById('email-tone')?.value||'professionnel'];
+  const prompt=`Tu es un commercial expert AODocs, plateforme de gestion documentaire.\n\nCONTEXTE AODOCS:\n${AODOCS}\n\nPROSPECT:\n- Prénom: ${p.prenom}\n- Nom: ${p.nom}\n- Fonction: ${p.fonction||'N/A'}\n- Entreprise: ${p.entreprise||'N/A'}\n- Secteur: ${p.secteur||'N/A'}\n- Contexte: ${p.contexte||'N/A'}\n\nMISSION: ${SEQP[ST.seq]}\n\nTON DEMANDÉ: ${tone}\n\nCONTRAINTES DE MISE EN PAGE STRICTES:\n1. Commence OBLIGATOIREMENT par "Bonjour Monsieur [Nom]" ou "Bonjour Madame [Nom]" selon le genre probable du prénom "${p.prenom}". Utilise uniquement le nom de famille.\n2. Après la ligne "Bonjour Monsieur/Madame [Nom]", ajoute UNE ligne vide avant de commencer le corps du message.\n3. Chaque paragraphe doit être séparé par une ligne vide (double saut de ligne \\n\\n).\n4. La proposition de RDV de 20 minutes doit être sur son propre paragraphe, séparée du reste par des lignes vides.\n5. Termine OBLIGATOIREMENT par cette signature exacte après une ligne vide:\n${SIGNATURE}\n6. Objet accrocheur <60 caractères.\n\nRéponds UNIQUEMENT en JSON sans backticks:\n{"subject":"OBJET","body":"CORPS"}`;
+  try{
+    const r=await claude(key,prompt,800);
+    const res=JSON.parse(r.replace(/```json|```/g,'').trim());
+    if(!res.subject.startsWith('AODocs -'))res.subject='AODocs - '+res.subject;
+    ST.drafts[ST.seq]=res;showEP(res.subject,res.body);
+    updatePills();
+    toast(`Email ${ST.seq} généré ✓`,'success');
+  }catch(e){document.getElementById('gen-loading').style.display='none';toast('Erreur : '+e.message,'error');}
+  document.getElementById('gen-btn').disabled=false;
+  document.getElementById('genall-btn').disabled=false;
+}
+
+async function genAll(){
+  const isM=document.getElementById('tab-manual').style.display!=='none';
+  if(isM)ST.prospect=getManual();else syncEx();
+  const p=ST.prospect;if(!p||(!p.prenom&&!p.nom&&!p.entreprise)){toast('Renseignez au moins le nom ou l\'entreprise','error');return;}
+  // Afficher la progression
+  document.getElementById('gen-progress').style.display='block';
+  document.getElementById('gen-loading').style.display='none';
+  document.getElementById('gen-btn').disabled=true;
+  document.getElementById('genall-btn').disabled=true;
+  for(let i=1;i<=4;i++){setGenStep(i,'wait');}
+  for(let i=1;i<=4;i++){
+    ST.seq=i;
+    document.querySelectorAll('.sp').forEach((pp,idx)=>pp.classList.toggle('active',idx===i-1));
+    document.getElementById('gen-progress-label').textContent=`Génération de l\'email ${i}/4...`;
+    document.getElementById('gen-progress-pct').textContent=`${i-1} / 4`;
+    document.getElementById('gen-progress-bar').style.width=((i-1)/4*100)+'%';
+    setGenStep(i,'loading');
+    await genEmail();
+    setGenStep(i,'done');
+    document.getElementById('gen-progress-pct').textContent=`${i} / 4`;
+    document.getElementById('gen-progress-bar').style.width=(i/4*100)+'%';
+    if(i<4)await new Promise(r=>setTimeout(r,300));
+  }
+  document.getElementById('gen-progress-label').textContent='✅ Séquence complète générée !';
+  document.getElementById('gen-btn').disabled=false;
+  document.getElementById('genall-btn').disabled=false;
+  ST.seq=1;document.querySelectorAll('.sp').forEach((pp,idx)=>pp.classList.toggle('active',idx===0));
+  if(ST.drafts[1])showEP(ST.drafts[1].subject,ST.drafts[1].body);
+  updatePills();
+  toast('Séquence complète générée ! 🎉','success');
+  setTimeout(()=>document.getElementById('gen-progress').style.display='none',3000);
+}
+
+function showEP(subj,body){
+  const p=ST.prospect;
+  document.getElementById('ep-subj').textContent=subj;
+  document.getElementById('ep-to').textContent=p?.email||'(email non renseigné)';
+  document.getElementById('ep-body').textContent=body;
+  document.getElementById('ep').style.display='block';
+  document.getElementById('gen-loading').style.display='none';
+  document.getElementById('cal-slots-section').style.display='none';
+  selectedSlots=[];
+}
+
+// ===================== GOOGLE CALENDAR =====================
+async function showCalSlots(){
+  const calId=localStorage.getItem('aodocs_cal');
+  const gasUrl=GAS_URL;
+  if(!calId||!gasUrl){
+    toast('Configurez le Calendar ID et l\'URL Apps Script d\'abord','error');return;
+  }
+  const section=document.getElementById('cal-slots-section');
+  const grid=document.getElementById('slots-grid');
+  section.style.display='block';
+  grid.innerHTML='<div style="font-size:12px;color:var(--tm)">Chargement des créneaux...</div>';
+  try{
+    const d=await callGAS({action:'getAvailableSlots',calendarId:calId,daysAhead:14,slotDuration:20});
+    if(!d.slots||d.slots.length===0){grid.innerHTML='<div style="font-size:12px;color:var(--tm)">Aucun créneau disponible dans les 14 prochains jours.</div>';return;}
+    grid.innerHTML='';
+    d.slots.slice(0,9).forEach((slot,i)=>{
+      const el=document.createElement('div');
+      el.className='slot';
+      el.innerHTML=`<div class="slot-time">${slot.time}</div><div class="slot-date">${slot.date}</div>`;
+      el.onclick=()=>{
+        el.classList.toggle('selected');
+        if(el.classList.contains('selected'))selectedSlots.push(slot);
+        else selectedSlots=selectedSlots.filter(s=>s.time!==slot.time||s.date!==slot.date);
+      };
+      grid.appendChild(el);
+    });
+  }catch(e){
+    // Fallback: générer des créneaux fictifs si pas de connexion GAS
+    grid.innerHTML='';
+    const days=['Lun','Mar','Mer','Jeu','Ven'];
+    const times=['10h00','11h00','14h00','15h00','16h00'];
+    const today=new Date();
+    let count=0;
+    for(let d=1;d<=14&&count<9;d++){
+      const date=new Date(today);date.setDate(today.getDate()+d);
+      if(date.getDay()===0||date.getDay()===6)continue;
+      const dayName=days[date.getDay()-1];
+      const dateStr=`${dayName} ${date.getDate()}/${date.getMonth()+1}`;
+      const time=times[count%times.length];
+      const slot={date:dateStr,time,full:`${dayName} ${date.getDate()}/${date.getMonth()+1} à ${time}`};
+      const el=document.createElement('div');
+      el.className='slot';
+      el.innerHTML=`<div class="slot-time">${time}</div><div class="slot-date">${dateStr}</div>`;
+      el.onclick=()=>{
+        el.classList.toggle('selected');
+        if(el.classList.contains('selected'))selectedSlots.push(slot);
+        else selectedSlots=selectedSlots.filter(s=>s.full!==slot.full);
+      };
+      grid.appendChild(el);
+      count++;
+    }
+    toast('Créneaux générés en mode local (configurez Apps Script pour vos vrais disponibilités)','info');
+  }
+}
+
+function insertSlotsInEmail(){
+  if(selectedSlots.length===0){toast('Sélectionnez au moins un créneau','error');return;}
+  const body=document.getElementById('ep-body');
+  const currentText=body.innerText.trimEnd();
+  const slotsText='\n\nVoici mes disponibilités pour un échange de 20 minutes :\n'+selectedSlots.map(s=>`• ${s.full||s.date+' à '+s.time}`).join('\n');
+
+  // Chercher la phrase qui propose le RDV
+  const rdvKeywords=['20 minutes','20min','rendez-vous','disponible','créneau','échange'];
+  let insertIndex=-1;
+  const lines=currentText.split('\n');
+  for(let i=0;i<lines.length;i++){
+    if(rdvKeywords.some(kw=>lines[i].toLowerCase().includes(kw))){
+      insertIndex=i;break;
+    }
+  }
+
+  let newText;
+  if(insertIndex!==-1){
+    // Insérer après la ligne de proposition de RDV
+    const before=lines.slice(0,insertIndex+1).join('\n');
+    const after=lines.slice(insertIndex+1).join('\n').trimStart();
+    newText=before+slotsText+'\n\n'+after;
+  }else{
+    // Fallback : insérer avant la signature
+    const sigIndex=currentText.lastIndexOf(SIGNATURE);
+    if(sigIndex!==-1){
+      const before=currentText.substring(0,sigIndex).trimEnd();
+      newText=before+slotsText+'\n\n'+SIGNATURE;
+    }else{
+      newText=currentText+slotsText;
+    }
+  }
+
+  body.innerText=newText;
+  document.getElementById('cal-slots-section').style.display='none';
+  selectedSlots=[];
+  toast('Créneaux insérés après la proposition de RDV ✓','success');
+}
+
+// ===================== SAVE PROSPECT =====================
+function saveProspect(){
+  const p=ST.prospect;if(!p){toast('Aucun prospect','error');return;}
+  const isM=document.getElementById('tab-manual').style.display!=='none';
+  if(isM)ST.prospect=getManual();
+  const now=new Date();const next=new Date(now);next.setDate(next.getDate()+5);
+  const existing=ST.prospects.findIndex(x=>x.email&&x.email===ST.prospect.email&&x.email!=='');
+  const prospect={id:Date.now(),...ST.prospect,emails:{...ST.drafts},sentEmails:[],openedEmails:[],replied:false,replyContent:'',currentStep:1,nextReminder:next.toISOString(),createdAt:now.toISOString(),ci:ST.prospects.length%AVC.length};
+  if(existing>=0){ST.prospects[existing]={...ST.prospects[existing],...prospect,id:ST.prospects[existing].id};}
+  else ST.prospects.push(prospect);
+  save();renderProspects();
+  toast(`${p.prenom} ${p.nom} sauvegardé !`,'success');
+  // Reset
+  ST.drafts={};ST.prospect=null;document.getElementById('ep').style.display='none';
+  document.getElementById('lnPaste').value='';document.getElementById('exf').style.display='none';
+  ['m-pn','m-nm','m-fn','m-em','m-en','m-se','m-cx'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.querySelectorAll('.sp').forEach((p,i)=>{p.className='sp'+(i===0?' active':'');});
+}
+
+// ===================== GMAIL SEND =====================
+function textToHtml(text){
+  return '<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.8;color:#222;max-width:600px">'
+    + text.split('\n').map(line=>
+        line.trim()===''
+          ? '<br>'
+          : '<span>'+line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span><br>'
+      ).join('')
+    + '</div>';
+}
+
+async function sendViaGmail(prospectId,step){
+  let p,subj,body,htmlBody;
+  if(prospectId){
+    p=ST.prospects.find(x=>x.id===prospectId);
+    if(!p)return;
+    const em=p.emails?.[step];if(!em){toast('Email non généré','error');return;}
+    subj=em.subject;body=em.body;htmlBody=textToHtml(body);
+  }else{
+    p=ST.prospect;
+    if(!p?.email){toast('Email du prospect non renseigné','error');return;}
+    subj=document.getElementById('ep-subj').textContent;
+    body=document.getElementById('ep-body').innerText;
+    htmlBody=textToHtml(body);
+    step=ST.seq;
+    // Auto-sauvegarder le prospect s'il n'existe pas encore
+    const isM=document.getElementById('tab-manual').style.display!=='none';
+    if(isM)ST.prospect=getManual(),p=ST.prospect;
+    const existing=ST.prospects.findIndex(x=>x.id===p.id||(x.email&&x.email===p.email&&x.email!==''));
+    if(existing<0){
+      const now=new Date();const next=new Date(now);next.setDate(next.getDate()+5);
+      const newProspect={id:p.id||Date.now(),...p,emails:{...ST.drafts},sentEmails:[],openedEmails:[],replied:false,replyContent:'',currentStep:1,nextReminder:next.toISOString(),createdAt:now.toISOString(),ci:ST.prospects.length%AVC.length};
+      ST.prospects.push(newProspect);
+      p=newProspect;ST.prospect=newProspect;
+    }else{
+      p=ST.prospects[existing];ST.prospect=p;
+    }
+  }
+  const gasUrl=GAS_URL;
+  if(!gasUrl){toast('Configurez l\'URL Apps Script d\'abord','error');return;}
+  const btn=event?.target?.closest('.btn');
+  if(btn){btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Envoi...';}
+  try{
+    await callGAS({action:'sendEmail',to:p.email,subject:subj,body:body,htmlBody:htmlBody,prospectId:p.id||Date.now(),emailStep:step,trackingUrl:gasUrl});
+    if(prospectId){markSent(prospectId,step);}
+    else{
+      if(!p.sentEmails)p.sentEmails=[];
+      if(!p.sentEmails.includes(step))p.sentEmails.push(step);
+      const nd=new Date();nd.setDate(nd.getDate()+5);p.nextReminder=step<4?nd.toISOString():null;
+      const idx=ST.prospects.findIndex(x=>x.id===p.id);
+      if(idx>=0){ST.prospects[idx]={...ST.prospects[idx],...p};}
+      save();renderProspects();renderTracking();
+    }
+    toast(`✅ Email envoyé à ${p.email} et prospect sauvegardé !`,'success');
+  }catch(e){toast('Erreur : '+e.message,'error');}
+  if(btn){btn.disabled=false;btn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Envoyer via Gmail';}
+}
+
+// ===================== CHECK REPLIES =====================
+async function checkReplies(){
+  const gasUrl=GAS_URL;
+  if(!gasUrl){toast('Configurez l\'URL Apps Script d\'abord','error');return;}
+  const btn=event.target.closest('.btn');btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Vérification...';
+  try{
+    const emails=ST.prospects.filter(p=>p.email).map(p=>({id:p.id,email:p.email,name:`${p.prenom} ${p.nom}`}));
+    const d=await callGAS({action:'checkReplies',prospects:emails});
+    let newReplies=0;
+    if(d.replies&&d.replies.length>0){
+      d.replies.forEach(reply=>{
+        const p=ST.prospects.find(x=>x.id===reply.prospectId);
+        if(p&&!p.replied){
+          p.replied=true;
+          p.replyContent=reply.snippet;
+          p.replyDate=reply.date;
+          // Arrêter la séquence
+          p.nextReminder=null;
+          p.sequenceStopped=true;
+          newReplies++;
+        }
+      });
+      if(newReplies>0){save();toast(`🎉 ${newReplies} réponse(s) détectée(s) — séquence(s) arrêtée(s) !`,'success');}
+      else toast('Aucune nouvelle réponse','info');
+    }else toast('Aucune réponse détectée','info');
+    renderReplies();renderTracking();
+  }catch(e){toast('Erreur : '+e.message,'error');}
+  btn.disabled=false;btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Vérifier les réponses';
+}
+
+function renderReplies(){
+  const c=document.getElementById('replies-list');const em=document.getElementById('replies-empty');
+  const replied=ST.prospects.filter(p=>p.replied);
+  if(!replied.length){em.style.display='block';c.innerHTML='';return;}
+  em.style.display='none';
+  c.innerHTML=replied.map(p=>{
+    const ini=((p.prenom?.[0]||'')+(p.nom?.[0]||'')).toUpperCase()||'?';
+    const ac=AVC[p.ci||0];
+    return `<div class="reply-item">
+      <div class="reply-avatar ${ac}" style="width:34px;height:34px;font-size:11px">${ini}</div>
+      <div class="reply-content">
+        <div class="reply-from">${p.prenom} ${p.nom} <span style="font-weight:400;color:var(--tm)">· ${p.entreprise||''}</span></div>
+        <div class="reply-preview">${esc(p.replyContent||'A répondu à votre email')}</div>
+        <div class="reply-date">${p.replyDate||'Date inconnue'}</div>
+        <div class="reply-badge">💬 Réponse reçue</div>
+      </div>
+      <button class="btn btn-s btn-xs" onclick="openModal(${p.id})">Voir la fiche</button>
+    </div>`;
+  }).join('');
+}
+
+// ===================== PROSPECTS LIST =====================
+function renderProspects(){
+  // Mettre à jour le filtre entreprise
+  const companies=[...new Set(ST.prospects.map(p=>p.entreprise).filter(Boolean))].sort();
+  const fEnt=document.getElementById('f-entreprise');
+  if(fEnt){
+    const cur=fEnt.value;
+    fEnt.innerHTML='<option value="">Toutes les entreprises</option>'+companies.map(c=>`<option value="${esc(c)}"${cur===c?' selected':''}>${esc(c)}</option>`).join('');
+  }
+  applyFilters();
+}
+
+function applyFilters(){
+  const tb=document.getElementById('p-tbody');
+  const emptyEl=document.getElementById('p-empty');
+  const noRes=document.getElementById('p-no-results');
+  tb.innerHTML='';
+
+  if(!ST.prospects.length){
+    emptyEl.style.display='block';noRes.style.display='none';
+    document.getElementById('f-count').textContent='0 prospect';return;
+  }
+  emptyEl.style.display='none';
+
+  const search=(document.getElementById('f-search')?.value||'').toLowerCase().trim();
+  const status=document.getElementById('f-status')?.value||'';
+  const entreprise=document.getElementById('f-entreprise')?.value||'';
+  const today=new Date();today.setHours(0,0,0,0);
+
+  // FILTRAGE
+  let filtered=ST.prospects.filter(p=>{
+    // Recherche texte
+    if(search){
+      const hay=`${p.prenom} ${p.nom} ${p.email} ${p.entreprise} ${p.fonction} ${p.secteur}`.toLowerCase();
+      if(!hay.includes(search))return false;
+    }
+    // Entreprise
+    if(entreprise&&p.entreprise!==entreprise)return false;
+    // Statut
+    if(status){
+      const sc=p.sentEmails?.length||0;const oc=p.openedEmails?.length||0;
+      const nd=p.nextReminder?new Date(p.nextReminder):null;if(nd)nd.setHours(0,0,0,0);
+      const due=nd&&nd<=today&&sc<4;
+      if(status==='new'&&(sc>0||p.replied))return false;
+      if(status==='sent'&&!(sc>0&&!oc&&!due&&!p.replied))return false;
+      if(status==='opened'&&!(oc>0&&!p.replied))return false;
+      if(status==='pending'&&!due)return false;
+      if(status==='replied'&&!p.replied)return false;
+    }
+    return true;
+  });
+
+  // TRI par défaut : plus récent
+  filtered.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+
+  // COMPTEUR
+  const cnt=filtered.length;
+  const total=ST.prospects.length;
+  document.getElementById('f-count').textContent=cnt===total?`${cnt} prospect${cnt>1?'s':''}`:`${cnt} / ${total} prospect${total>1?'s':''}`;
+
+  if(!filtered.length){noRes.style.display='block';return;}
+  noRes.style.display='none';
+
+  // RENDU
+  filtered.forEach(p=>{
+    const sc=p.sentEmails?.length||0;const oc=p.openedEmails?.length||0;
+    const nd=p.nextReminder?new Date(p.nextReminder):null;if(nd)nd.setHours(0,0,0,0);
+    const due=nd&&nd<=today&&sc<4;
+    const ini=((p.prenom?.[0]||'')+(p.nom?.[0]||'')).toUpperCase()||'?';
+    const ac=AVC[p.ci||0];
+    let badge=`<span class="badge b-new"><span class="bdot"></span>Nouveau</span>`;
+    if(p.replied)badge=`<span class="badge b-replied"><span class="bdot"></span>A répondu</span>`;
+    else if(oc>0)badge=`<span class="badge b-opened"><span class="bdot"></span>Ouvert</span>`;
+    else if(sc>0&&due)badge=`<span class="badge b-pending"><span class="bdot"></span>À relancer</span>`;
+    else if(sc>0)badge=`<span class="badge b-sent"><span class="bdot"></span>En cours</span>`;
+    const ns=nd?nd.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'—';
+    const nst=due?'color:var(--warn);font-weight:600':'color:var(--tm)';
+    tb.innerHTML+=`<tr>
+      <td><div style="display:flex;align-items:center;gap:8px"><div class="av ${ac}" style="width:30px;height:30px;font-size:10px">${ini}</div><div><div style="font-weight:600;font-size:13px">${p.prenom} ${p.nom}</div><div style="font-size:10.5px;color:var(--tm)">${p.email||'—'}</div></div></div></td>
+      <td style="font-weight:500;font-size:13px">${p.entreprise||'—'}</td>
+      <td style="color:var(--tm);font-size:12px">${p.fonction||'—'}</td>
+      <td><div style="font-size:10.5px;color:var(--tm);margin-bottom:4px">Email ${sc}/4</div><div class="pb"><div class="pf" style="width:${sc*25}%"></div></div></td>
+      <td>${badge}</td>
+      <td style="font-size:11.5px;${nst}">${due?'⚠️ ':''}${ns}</td>
+      <td><div style="display:flex;gap:4px"><button class="btn btn-s btn-xs" onclick="openModal(${p.id})">Voir</button><button class="btn btn-d btn-xs" onclick="delProspect(${p.id})">✕</button></div></td>
+    </tr>`;
+  });
+}
+
+function resetFilters(){
+  document.getElementById('f-search').value='';
+  document.getElementById('f-status').value='';
+  document.getElementById('f-entreprise').value='';
+  applyFilters();
+  toast('Filtres effacés','success');
+}
+
+function delProspect(id){
+  if(!confirm('Supprimer ce prospect ?'))return;
+  ST.prospects=ST.prospects.filter(p=>p.id!==id);
+  save();
+  renderProspects();renderReminders();renderTracking();
+  toast('Prospect supprimé et synchronisé ✓','success');
+}
+
+// ===================== MODAL =====================
+function openModal(id){
+  const p=ST.prospects.find(x=>x.id===id);if(!p)return;
+  const ini=((p.prenom?.[0]||'')+(p.nom?.[0]||'')).toUpperCase()||'?';
+  const ac=AVC[p.ci||0];
+  const sl=['Prise de contact','Relance J+5','Valeur J+10','Dernière chance J+15'];
+  const si=['📧','🔄','💡','🏁'];
+  document.getElementById('modal-title').innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="av ${ac}" style="width:36px;height:36px;font-size:12px">${ini}</div><div><div>${p.prenom} ${p.nom}</div><div style="font-size:11px;color:var(--tm);font-weight:400;margin-top:1px">${p.fonction||''} · ${p.entreprise||''}</div></div></div>`;
+  let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;padding:11px;background:var(--s2);border-radius:var(--rs)">`;
+  [['Email',p.email||'—'],['Secteur',p.secteur||'—'],['Statut',p.replied?'✅ A répondu':p.openedEmails?.length?'👁 A ouvert':p.sentEmails?.length?'📤 Envoyé':'Nouveau'],['Créé le',new Date(p.createdAt).toLocaleDateString('fr-FR')]].forEach(([l,val])=>html+=`<div><div style="font-size:9px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">${l}</div><div style="font-size:12.5px">${val}</div></div>`);
+  html+='</div>';
+  // Bouton générer séquence si aucun email généré
+  const hasEmails=p.emails&&Object.keys(p.emails).length>0;
+  if(!hasEmails){
+    html+=`<div class="ib ib-b" style="margin-bottom:12px;cursor:pointer" onclick="closeModal();loadProspectIntoGenerator(${id})">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <div><strong>Aucun email généré</strong> — Cliquez ici pour générer la séquence email de ce prospect</div>
+    </div>`;
+  }
+  if(p.replied&&p.replyContent)html+=`<div class="ib ib-v" style="margin-bottom:12px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg><div><strong>Réponse reçue</strong> · ${p.replyDate||''}<br><span style="color:var(--tm)">${esc(p.replyContent)}</span></div></div>`;
+  for(let i=1;i<=4;i++){
+    const em=p.emails?.[i];const sent=p.sentEmails?.includes(i);const opened=p.openedEmails?.includes(i);
+    let sb=opened?`<span class="badge b-opened" style="margin-left:auto"><span class="bdot"></span>Ouvert</span>`:sent?`<span class="badge b-sent" style="margin-left:auto"><span class="bdot"></span>Envoyé</span>`:'';
+    let acts='';
+    if(em&&!sent)acts+=`<button class="btn btn-gmail btn-xs" onclick="sendViaGmail(${id},${i})">📧 Envoyer via Gmail</button>`;
+    if(em&&!sent)acts+=`<button class="btn btn-ok btn-xs" onclick="markSent(${id},${i})">✓ Marquer envoyé</button>`;
+    if(sent&&!opened)acts+=`<button class="btn btn-s btn-xs" onclick="markOpened(${id},${i})">👁 Marquer ouvert</button>`;
+    if(em){acts+=`<button class="btn btn-g btn-xs" onclick="copyModal(${id},${i})">Copier</button>`;}
+    if(em){acts+=`<button class="btn btn-s btn-xs" onclick="saveEmailEdit(${id},${i})" style="margin-left:auto">💾 Sauvegarder</button>`;}
+    html+=`<div style="border:1px solid var(--border);border-radius:var(--rs);margin-bottom:8px;overflow:hidden">
+      <div style="padding:8px 12px;background:var(--s2);display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--bl)">
+        <span>${si[i-1]}</span><span style="font-size:12px;font-weight:600">Email ${i} — ${sl[i-1]}</span>${sb}
+      </div>
+      ${em
+        ? `<div style="padding:8px 12px;font-size:11.5px">
+            <div style="color:var(--tm);margin-bottom:4px;font-weight:600;font-size:10.5px">OBJET</div>
+            <input id="edit-subj-${id}-${i}" value="${esc(em.subject)}" style="width:100%;font-size:12.5px;margin-bottom:8px;padding:6px 9px;border:1.5px solid var(--border);border-radius:5px;font-family:Inter,sans-serif">
+            <div style="color:var(--tm);margin-bottom:4px;font-weight:600;font-size:10.5px">CORPS</div>
+            <textarea id="edit-body-${id}-${i}" style="width:100%;font-size:12px;line-height:1.7;min-height:120px;padding:8px;border:1.5px solid var(--border);border-radius:5px;font-family:Inter,sans-serif;resize:vertical">${esc(em.body)}</textarea>
+           </div>`
+        : `<div style="padding:10px 12px;font-size:12px;color:var(--tm)">Email non généré</div>`
+      }
+      ${acts?`<div style="padding:6px 12px;border-top:1px solid var(--bl);display:flex;gap:5px;flex-wrap:wrap;align-items:center">${acts}</div>`:''}
+    </div>`;
+  }
+  document.getElementById('modal-body').innerHTML=html;
+  document.getElementById('modal').classList.add('open');
+}
+
+function saveEmailEdit(id,step){
+  const p=ST.prospects.find(x=>x.id===id);if(!p)return;
+  const subj=document.getElementById(`edit-subj-${id}-${step}`)?.value.trim();
+  const body=document.getElementById(`edit-body-${id}-${step}`)?.value.trim();
+  if(!subj||!body){toast('Objet et corps ne peuvent pas être vides','error');return;}
+  if(!p.emails)p.emails={};
+  p.emails[step]={subject:subj,body:body};
+  save();toast(`Email ${step} modifié et sauvegardé ✓`,'success');
+}
+
+function loadProspectIntoGenerator(id){
+  const p=ST.prospects.find(x=>x.id===id);if(!p)return;
+  ST.prospect=p;
+  ST.drafts=p.emails||{};
+  ST.seq=1;
+  // Naviguer vers la page nouveau prospect
+  go('pg-new');
+  // Remplir le formulaire manuel
+  const tabs=document.querySelectorAll('.tab');
+  tabs.forEach((t,i)=>t.classList.toggle('active',i===0));
+  ['tab-manual','tab-linkedin','tab-csv'].forEach(n=>{const d=document.getElementById(n);if(d)d.style.display=n==='tab-manual'?'block':'none';});
+  document.getElementById('m-pn').value=p.prenom||'';
+  document.getElementById('m-nm').value=p.nom||'';
+  document.getElementById('m-fn').value=p.fonction||'';
+  document.getElementById('m-em').value=p.email||'';
+  document.getElementById('m-en').value=p.entreprise||'';
+  document.getElementById('m-se').value=p.secteur||'';
+  document.getElementById('m-cx').value=p.contexte||'';
+  document.getElementById('ep').style.display='none';
+  document.getElementById('gen-progress').style.display='none';
+  updatePills();
+  toast(`${p.prenom} ${p.nom} chargé — générez la séquence email 🚀`,'success');
+}
+
+function markSent(id,step){
+  const p=ST.prospects.find(x=>x.id===id);if(!p)return;
+  if(p.replied){toast('Séquence arrêtée — ce prospect a déjà répondu','info');return;}
+  if(!p.sentEmails)p.sentEmails=[];if(!p.sentEmails.includes(step))p.sentEmails.push(step);
+  if(step<4){const d=new Date();d.setDate(d.getDate()+5);p.nextReminder=d.toISOString();}else p.nextReminder=null;
+  save();openModal(id);renderProspects();toast(`Email ${step} marqué envoyé`,'success');
+}
+function markOpened(id,step){
+  const p=ST.prospects.find(x=>x.id===id);if(!p)return;
+  if(!p.openedEmails)p.openedEmails=[];if(!p.openedEmails.includes(step))p.openedEmails.push(step);
+  save();openModal(id);renderTracking();toast(`Email ${step} marqué ouvert`,'success');
+}
+function copyModal(id,step){
+  const p=ST.prospects.find(x=>x.id===id);const e=p?.emails?.[step];if(!e)return;
+  navigator.clipboard.writeText(`Objet: ${e.subject}\n\n${e.body}`);toast('Email copié !','success');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+
+// ===================== REMINDERS =====================
+function renderReminders(){
+  const c=document.getElementById('rem-list');const em=document.getElementById('rem-empty');c.innerHTML='';
+  const today=new Date();today.setHours(0,0,0,0);
+  const list=ST.prospects.filter(p=>p.nextReminder&&(p.sentEmails?.length||0)<4&&!p.replied).sort((a,b)=>new Date(a.nextReminder)-new Date(b.nextReminder));
+  if(!list.length){em.style.display='block';return;}em.style.display='none';
+  list.forEach(p=>{
+    const d=new Date(p.nextReminder);d.setHours(0,0,0,0);
+    const diff=Math.round((d-today)/86400000);
+    const step=(p.sentEmails?.length||0)+1;
+    const ini=((p.prenom?.[0]||'')+(p.nom?.[0]||'')).toUpperCase()||'?';
+    const ac=AVC[p.ci||0];
+    let cls,label,bc;
+    if(diff<=0){cls='urgent';label=diff===0?"Aujourd'hui !":Math.abs(diff)+'j de retard';bc='urgent';}
+    else if(diff<=2){cls='upcoming';label='Dans '+diff+'j';bc='upcoming';}
+    else{cls='normal';label='Dans '+diff+'j';bc='normal';}
+    c.innerHTML+=`<div class="ri ${cls}" onclick="openModal(${p.id})">
+      <div class="av ${ac}" style="width:34px;height:34px;font-size:11px">${ini}</div>
+      <div class="ri-info"><div class="ri-name">${p.prenom} ${p.nom}</div><div class="ri-detail">${p.entreprise||'—'} · ${p.fonction||'—'} · Email ${step}/4</div></div>
+      <div class="ri-badge ${bc}">${label}</div>
+    </div>`;
+  });
+}
+
+// ===================== TRACKING / DASHBOARD =====================
+function renderTracking(){
+  const total=ST.prospects.length;
+  const sent=ST.prospects.reduce((a,p)=>a+(p.sentEmails?.length||0),0);
+  const opened=ST.prospects.reduce((a,p)=>a+(p.openedEmails?.length||0),0);
+  const replied=ST.prospects.filter(p=>p.replied).length;
+  document.getElementById('s-total').textContent=total;
+  document.getElementById('s-sent').textContent=sent;
+  document.getElementById('s-opened').textContent=opened;
+  document.getElementById('s-replied').textContent=replied;
+  const or=sent?Math.round(opened/sent*100):0;
+  const rr=total?Math.round(replied/total*100):0;
+  document.getElementById('open-rate').textContent=or+'%';
+  document.getElementById('open-bar').style.width=or+'%';
+  document.getElementById('reply-rate').textContent=rr+'%';
+  document.getElementById('reply-bar').style.width=rr+'%';
+
+  // Perf par email
+  for(let i=1;i<=4;i++){
+    const stepSent=ST.prospects.filter(p=>p.sentEmails?.includes(i)).length;
+    const stepOpen=ST.prospects.filter(p=>p.openedEmails?.includes(i)).length;
+    const rate=stepSent?Math.round(stepOpen/stepSent*100):0;
+    const labels=['Contact','Relance','Valeur','Final'];
+    const colors=['#1a6ff0','#059669','#7c3aed','#d97706'];
+    document.getElementById('perf-'+i).innerHTML=`
+      <div style="font-size:10px;font-weight:700;color:var(--tm);margin-bottom:6px">${labels[i-1]}</div>
+      <div style="font-size:20px;font-weight:800;color:${colors[i-1]}">${rate}%</div>
+      <div style="font-size:10px;color:var(--tm);margin-top:2px">${stepOpen}/${stepSent} ouverts</div>
+      <div class="pb" style="margin-top:6px"><div class="pf" style="width:${rate}%;background:${colors[i-1]}"></div></div>`;
+  }
+
+  // Tableau détail
+  const tb=document.getElementById('t-tbody');tb.innerHTML='';
+  ST.prospects.forEach(p=>{
+    const ini=((p.prenom?.[0]||'')+(p.nom?.[0]||'')).toUpperCase()||'?';
+    const ac=AVC[p.ci||0];
+    let cells='';
+    for(let i=1;i<=4;i++){const s=p.sentEmails?.includes(i);const o=p.openedEmails?.includes(i);cells+=`<td style="text-align:center;font-size:14px">${o?'✅':s?'📤':'<span style="color:var(--border)">—</span>'}</td>`;}
+    cells+=`<td style="text-align:center">${p.replied?'<span style="font-size:13px">💬</span>':'<span style="color:var(--border)">—</span>'}</td>`;
+    tb.innerHTML+=`<tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av ${ac}" style="width:24px;height:24px;font-size:9px">${ini}</div><div><div style="font-weight:500;font-size:12px">${p.prenom} ${p.nom}</div><div style="font-size:10.5px;color:var(--tm)">${p.entreprise||'—'}</div></div></div></td>${cells}</tr>`;
+  });
+}
+
+// ===================== EMAIL ACTIONS =====================
+function copyEmail(){
+  const s=document.getElementById('ep-subj').textContent;const b=document.getElementById('ep-body').textContent;
+  navigator.clipboard.writeText('Objet: '+s+'\n\n'+b);toast('Email copié !','success');
+}
+
+// ===================== API HELPERS =====================
+async function claude(key,prompt,max=800){
+  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:max,messages:[{role:'user',content:prompt}]})});
+  const d=await r.json();if(d.error)throw new Error(d.error.message);return d.content[0].text.trim();
+}
+async function callGAS(payload){
+  const url=GAS_URL;
+  if(!url)throw new Error('URL Apps Script non configurée');
+  const r=await fetch(url,{method:'POST',body:JSON.stringify(payload)});
+  const d=await r.json();if(!d.success)throw new Error(d.error||'Erreur Apps Script');return d;
+}
+
+function v(id){return document.getElementById(id)?.value?.trim()||'';}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toast(msg,type='success'){
+  const el=document.getElementById('toast');
+  document.getElementById('t-icon').textContent=type==='success'?'✓':type==='info'?'ℹ':'✕';
+  document.getElementById('t-msg').textContent=msg;
+  el.className=type;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+function showSetupModal(){
+  document.getElementById('setupModal').style.display='flex';
+}
+function saveSetup(){
+  const k=document.getElementById('setup-api-key').value.trim();
+  const err=document.getElementById('setup-error');
+  if(!k.startsWith('sk-ant-')){err.textContent='Clé API invalide (doit commencer par sk-ant-)';err.style.display='block';return;}
+  const c=document.getElementById('setup-cal-id').value.trim();
+  localStorage.setItem('aodocs_key',k);
+  if(c){localStorage.setItem('aodocs_cal',c);document.getElementById('calId').value=c;setStatus('calStatus','✓ Calendar configuré','ok');}
+  document.getElementById('apiKey').value=k;
+  setStatus('apiStatus','✓ Clé configurée','ok');
+  document.getElementById('setupModal').style.display='none';
+  toast('Configuration sauvegardée !','success');
+}
+
+</script>
+
+<div class="setup-overlay" id="setupModal" style="display:none;">
+  <div class="setup-modal">
+    <div class="setup-logo">
+      <svg width="28" height="28" viewBox="0 0 42 63"><polygon points="0.54,20.27 20.81,0 41.08,20.27 20.89,40.62" fill="#0da0ff"/><polygon points="22.54,41.19 41.14,41.19 31.84,31.89" fill="#f5c600"/><polygon points="9.95,31.81 0,41.76 20.86,62.62 40.76,42.72 20.89,42.72" fill="#ff2153"/></svg>
+      <span style="font-size:16px;font-weight:700;color:#000325;letter-spacing:1px;">AODOCS</span>
+    </div>
+    <div class="setup-title">Configuration initiale</div>
+    <div class="setup-sub">Saisissez vos informations personnelles ci-dessous. Elles sont sauvegardées uniquement dans votre navigateur.</div>
+    <div class="setup-field">
+      <div class="setup-label">Clé API Claude</div>
+      <input class="setup-input" id="setup-api-key" type="password" placeholder="sk-ant-api03-...">
+      <div class="setup-hint">Obtenez votre clé sur console.anthropic.com → API Keys</div>
+    </div>
+
+    <div class="setup-field">
+      <div class="setup-label">Google Calendar ID</div>
+      <input class="setup-input" id="setup-cal-id" placeholder="votre.email@aodocs.com">
+      <div class="setup-hint">Votre email Google = votre Calendar ID principal</div>
+    </div>
+    <div class="setup-error" id="setup-error"></div>
+    <button class="setup-btn" onclick="saveSetup()">Enregistrer et démarrer →</button>
+  </div>
+</div>
+</body>
+</html>
