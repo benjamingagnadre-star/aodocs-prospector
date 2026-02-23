@@ -1119,7 +1119,15 @@ async function sendViaGmail(prospectId,step){
     p=ST.prospects.find(x=>x.id===prospectId);
     if(!p)return;
     const em=p.emails?.[step];if(!em){toast('Email non généré','error');return;}
-    subj=em.subject;body=em.body;htmlBody=textToHtml(body);
+    // Lire le textarea en priorité (peut contenir des créneaux insérés ou modifs manuelles)
+    const taSubj=document.getElementById(`edit-subj-${prospectId}-${step}`);
+    const taBody=document.getElementById(`edit-body-${prospectId}-${step}`);
+    subj=(taSubj?.value?.trim())||em.subject;
+    body=(taBody?.value?.trim())||em.body;
+    htmlBody=textToHtml(body);
+    // Persister le contenu modifié dans p.emails avant envoi
+    if(!p.emails)p.emails={};
+    p.emails[step]={subject:subj,body:body};
   }else{
     p=ST.prospect;
     if(!p?.email){toast('Email du prospect non renseigné','error');return;}
@@ -1343,6 +1351,7 @@ function openModal(id){
     if(em&&!sent)acts+=`<button class="btn btn-gmail btn-xs" onclick="sendViaGmail(${id},${i})">📧 Envoyer via Gmail</button>`;
     if(em&&!sent)acts+=`<button class="btn btn-ok btn-xs" onclick="markSent(${id},${i})">✓ Marquer envoyé</button>`;
     if(sent&&!opened)acts+=`<button class="btn btn-s btn-xs" onclick="markOpened(${id},${i})">👁 Marquer ouvert</button>`;
+    if(em&&!sent)acts+=`<button class="btn btn-cal btn-xs" onclick="showCalSlotsInModal(${id},${i})" id="cal-btn-${id}-${i}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Créneaux</button>`;
     if(em){acts+=`<button class="btn btn-g btn-xs" onclick="copyModal(${id},${i})">Copier</button>`;}
     if(em){acts+=`<button class="btn btn-s btn-xs" onclick="saveEmailEdit(${id},${i})" style="margin-left:auto">💾 Sauvegarder</button>`;}
     html+=`<div style="border:1px solid var(--border);border-radius:var(--rs);margin-bottom:8px;overflow:hidden">
@@ -1355,6 +1364,20 @@ function openModal(id){
             <input id="edit-subj-${id}-${i}" value="${esc(em.subject)}" style="width:100%;font-size:12.5px;margin-bottom:8px;padding:6px 9px;border:1.5px solid var(--border);border-radius:5px;font-family:Inter,sans-serif">
             <div style="color:var(--tm);margin-bottom:4px;font-weight:600;font-size:10.5px">CORPS</div>
             <textarea id="edit-body-${id}-${i}" style="width:100%;font-size:12px;line-height:1.7;min-height:120px;padding:8px;border:1.5px solid var(--border);border-radius:5px;font-family:Inter,sans-serif;resize:vertical">${esc(em.body)}</textarea>
+            <div id="cal-slots-modal-${id}-${i}" style="display:none;margin-top:10px;padding:12px;background:#f8fbff;border:1.5px solid #bfdbfe;border-radius:var(--rs)">
+              <div style="font-size:11px;font-weight:700;color:#1e40af;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+                <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:middle;margin-right:4px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Sélectionnez les créneaux à insérer</span>
+                <button onclick="document.getElementById('cal-slots-modal-${id}-${i}').style.display='none'" style="background:none;border:none;cursor:pointer;color:var(--tm);font-size:14px;line-height:1">✕</button>
+              </div>
+              <div class="slots-grid" id="modal-slots-grid-${id}-${i}" style="grid-template-columns:repeat(3,1fr)"></div>
+              <div style="margin-top:10px;display:flex;gap:6px;align-items:center">
+                <button class="btn btn-cal btn-sm" onclick="insertSlotsInModalEmail(${id},${i})">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Insérer les créneaux sélectionnés
+                </button>
+                <span style="font-size:10.5px;color:var(--tm)" id="modal-slots-count-${id}-${i}">0 sélectionné(s)</span>
+              </div>
+            </div>
            </div>`
         : `<div style="padding:10px 12px;font-size:12px;color:var(--tm)">Email non généré</div>`
       }
@@ -1363,6 +1386,117 @@ function openModal(id){
   }
   document.getElementById('modal-body').innerHTML=html;
   document.getElementById('modal').classList.add('open');
+}
+
+// ===================== CALENDAR SLOTS IN MODAL =====================
+let modalSelectedSlots={};
+
+async function showCalSlotsInModal(id,step){
+  const calId=localStorage.getItem('aodocs_cal');
+  const sectionId=`cal-slots-modal-${id}-${step}`;
+  const gridId=`modal-slots-grid-${id}-${step}`;
+  const section=document.getElementById(sectionId);
+  const grid=document.getElementById(gridId);
+  if(!section||!grid)return;
+
+  // Toggle : si déjà ouvert, fermer
+  if(section.style.display!=='none'){section.style.display='none';return;}
+
+  section.style.display='block';
+  grid.innerHTML='<div style="font-size:11.5px;color:var(--tm);padding:6px 0">⏳ Chargement des créneaux depuis votre agenda...</div>';
+  const key=`${id}-${step}`;
+  modalSelectedSlots[key]=[];
+
+  const renderSlots=(slots)=>{
+    grid.innerHTML='';
+    if(!slots||slots.length===0){
+      grid.innerHTML='<div style="font-size:11.5px;color:var(--tm)">Aucun créneau disponible dans les 14 prochains jours.</div>';return;
+    }
+    slots.slice(0,9).forEach(slot=>{
+      const el=document.createElement('div');
+      el.className='slot';
+      el.innerHTML=`<div class="slot-time">${slot.time}</div><div class="slot-date">${slot.date}</div>`;
+      el.onclick=()=>{
+        el.classList.toggle('selected');
+        if(el.classList.contains('selected'))modalSelectedSlots[key].push(slot);
+        else modalSelectedSlots[key]=modalSelectedSlots[key].filter(s=>s.time!==slot.time||s.date!==slot.date);
+        document.getElementById(`modal-slots-count-${id}-${step}`).textContent=`${modalSelectedSlots[key].length} sélectionné(s)`;
+      };
+      grid.appendChild(el);
+    });
+  };
+
+  if(calId&&GAS_URL){
+    try{
+      const d=await callGAS({action:'getAvailableSlots',calendarId:calId,daysAhead:14,slotDuration:20});
+      renderSlots(d.slots);
+    }catch(e){
+      // Fallback créneaux fictifs
+      const slots=[];const today=new Date();const days=['Lun','Mar','Mer','Jeu','Ven'];const times=['10h00','11h00','14h00','15h00','16h00'];
+      let count=0;
+      for(let dd=1;dd<=14&&count<9;dd++){
+        const date=new Date(today);date.setDate(today.getDate()+dd);
+        if(date.getDay()===0||date.getDay()===6)continue;
+        const dayName=days[date.getDay()-1];
+        const dateStr=`${dayName} ${date.getDate()}/${date.getMonth()+1}`;
+        const time=times[count%times.length];
+        slots.push({date:dateStr,time,full:`${dayName} ${date.getDate()}/${date.getMonth()+1} à ${time}`});
+        count++;
+      }
+      renderSlots(slots);
+      toast('Agenda non connecté — créneaux exemples affichés','info');
+    }
+  }else{
+    // Pas de Calendar configuré — créneaux fictifs
+    const slots=[];const today=new Date();const days=['Lun','Mar','Mer','Jeu','Ven'];const times=['10h00','11h00','14h00','15h00','16h00'];
+    let count=0;
+    for(let dd=1;dd<=14&&count<9;dd++){
+      const date=new Date(today);date.setDate(today.getDate()+dd);
+      if(date.getDay()===0||date.getDay()===6)continue;
+      const dayName=days[date.getDay()-1];
+      const dateStr=`${dayName} ${date.getDate()}/${date.getMonth()+1}`;
+      const time=times[count%times.length];
+      slots.push({date:dateStr,time,full:`${dayName} ${date.getDate()}/${date.getMonth()+1} à ${time}`});
+      count++;
+    }
+    renderSlots(slots);
+    toast('Configurez votre Calendar ID dans les paramètres pour un agenda réel','info');
+  }
+}
+
+function insertSlotsInModalEmail(id,step){
+  const key=`${id}-${step}`;
+  const slots=modalSelectedSlots[key]||[];
+  if(!slots.length){toast('Sélectionnez au moins un créneau','error');return;}
+
+  const textarea=document.getElementById(`edit-body-${id}-${step}`);
+  if(!textarea)return;
+  const currentText=textarea.value;
+
+  const slotsText='\n\nJe vous propose les créneaux suivants pour un échange de 20 minutes :\n'
+    +slots.map(s=>`  • ${s.full}`).join('\n')
+    +'\n\nN\'hésitez pas à me suggérer un autre moment si ces créneaux ne vous conviennent pas.';
+
+  // Insérer avant la signature (dernière occurrence de la signature ou en fin de texte)
+  const sigMarker='Benjamin Gagnadre';
+  const sigIndex=currentText.lastIndexOf(sigMarker);
+  let newText;
+  if(sigIndex!==-1){
+    const before=currentText.substring(0,sigIndex).trimEnd();
+    const after=currentText.substring(sigIndex);
+    newText=before+slotsText+'\n\n'+after;
+  }else{
+    newText=currentText.trimEnd()+slotsText;
+  }
+  textarea.value=newText;
+
+  // Fermer le panneau créneaux
+  document.getElementById(`cal-slots-modal-${id}-${step}`).style.display='none';
+  modalSelectedSlots[key]=[];
+  toast('Créneaux insérés dans l\'email ✓ — pensez à sauvegarder','success');
+  // Scroll vers le textarea pour voir l'insertion
+  textarea.scrollIntoView({behavior:'smooth',block:'nearest'});
+  textarea.focus();
 }
 
 function saveEmailEdit(id,step){
