@@ -653,13 +653,34 @@
 
     <!-- TABLEAU DÉTAIL -->
     <div class="card" style="padding:0;overflow:hidden">
-      <div style="padding:14px 18px 10px"><div class="ct"><div class="ci ci-o">📋</div> Suivi détaillé par prospect</div></div>
+      <div style="padding:14px 18px 12px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--bl)">
+        <div class="ct"><div class="ci ci-o">📋</div> Suivi détaillé par prospect</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div style="position:relative">
+            <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#9ca3af;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="tf-search" type="text" placeholder="Rechercher…" oninput="applyTrackingFilters()" style="padding:6px 10px 6px 30px;font-size:12px;border:1.5px solid var(--border);border-radius:6px;width:155px;outline:none;font-family:Inter,sans-serif" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+          </div>
+          <select id="tf-status" class="filter-select" style="font-size:12px;padding:6px 26px 6px 10px" onchange="applyTrackingFilters()">
+            <option value="">Tous les statuts</option>
+            <option value="replied">💬 A répondu</option>
+            <option value="opened">✅ A ouvert</option>
+            <option value="sent">📤 Email envoyé</option>
+            <option value="none">— Pas démarré</option>
+          </select>
+          <select id="tf-entreprise" class="filter-select" style="font-size:12px;padding:6px 26px 6px 10px" onchange="applyTrackingFilters()">
+            <option value="">Toutes les entreprises</option>
+          </select>
+          <span id="tf-count" style="font-size:11px;font-weight:600;color:var(--tm);white-space:nowrap;padding:5px 10px;background:var(--s2);border-radius:20px"></span>
+          <button onclick="resetTrackingFilters()" title="Effacer" style="background:none;border:none;color:var(--tl);font-size:12px;cursor:pointer;padding:5px 7px;border-radius:5px;font-family:Inter,sans-serif;font-weight:500" onmouseover="this.style.background='var(--err-bg)';this.style.color='var(--err)'" onmouseout="this.style.background='none';this.style.color='var(--tl)'">✕ Effacer</button>
+        </div>
+      </div>
       <div class="tw">
         <table>
           <thead><tr><th>Contact</th><th style="text-align:center">Email 1</th><th style="text-align:center">Email 2</th><th style="text-align:center">Email 3</th><th style="text-align:center">Email 4</th><th style="text-align:center">Réponse</th></tr></thead>
           <tbody id="t-tbody"></tbody>
         </table>
       </div>
+      <div id="tf-empty" style="display:none;text-align:center;padding:28px;color:var(--tm);font-size:13px">Aucun prospect ne correspond aux filtres.</div>
     </div>
   </div>
 </div>
@@ -819,8 +840,8 @@ function importCsvProspects(){
   csvData.forEach(p=>{
     const existing=ST.prospects.findIndex(x=>x.email&&x.email===p.email&&p.email!=='');
     if(existing>=0)return;
-    const now=new Date();const next=new Date(now);next.setDate(next.getDate()+5);
-    ST.prospects.push({id:Date.now()+Math.random(),...p,emails:{},sentEmails:[],openedEmails:[],replied:false,replyContent:'',currentStep:1,nextReminder:next.toISOString(),createdAt:now.toISOString(),ci:ST.prospects.length%AVC.length});
+    const now=new Date();
+    ST.prospects.push({id:Date.now()+Math.random(),...p,emails:{},sentEmails:[],openedEmails:[],replied:false,replyContent:'',currentStep:1,nextReminder:now.toISOString(),createdAt:now.toISOString(),ci:ST.prospects.length%AVC.length});
     imported++;
   });
   save();renderProspects();
@@ -1088,9 +1109,9 @@ function saveProspect(){
   const p=ST.prospect;if(!p){toast('Aucun prospect','error');return;}
   const isM=document.getElementById('tab-manual').style.display!=='none';
   if(isM)ST.prospect=getManual();
-  const now=new Date();const next=new Date(now);next.setDate(next.getDate()+5);
+  const now=new Date();
   const existing=ST.prospects.findIndex(x=>x.email&&x.email===ST.prospect.email&&x.email!=='');
-  const prospect={id:Date.now(),...ST.prospect,emails:{...ST.drafts},sentEmails:[],openedEmails:[],replied:false,replyContent:'',currentStep:1,nextReminder:next.toISOString(),createdAt:now.toISOString(),ci:ST.prospects.length%AVC.length};
+  const prospect={id:Date.now(),...ST.prospect,emails:{...ST.drafts},sentEmails:[],openedEmails:[],replied:false,replyContent:'',currentStep:1,nextReminder:now.toISOString(),createdAt:now.toISOString(),ci:ST.prospects.length%AVC.length};
   if(existing>=0){ST.prospects[existing]={...ST.prospects[existing],...prospect,id:ST.prospects[existing].id};}
   else ST.prospects.push(prospect);
   save();renderProspects();
@@ -1098,7 +1119,7 @@ function saveProspect(){
   // Reset
   ST.drafts={};ST.prospect=null;document.getElementById('ep').style.display='none';
   document.getElementById('lnPaste').value='';document.getElementById('exf').style.display='none';
-  ['m-pn','m-nm','m-fn','m-em','m-en','m-se','m-cx'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['m-pn','m-nm','m-fn','m-em','m-en','m-se','m-cx'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); 
   document.querySelectorAll('.sp').forEach((p,i)=>{p.className='sp'+(i===0?' active':'');});
 }
 
@@ -1140,8 +1161,8 @@ async function sendViaGmail(prospectId,step){
     if(isM)ST.prospect=getManual(),p=ST.prospect;
     const existing=ST.prospects.findIndex(x=>x.id===p.id||(x.email&&x.email===p.email&&x.email!==''));
     if(existing<0){
-      const now=new Date();const next=new Date(now);next.setDate(next.getDate()+5);
-      const newProspect={id:p.id||Date.now(),...p,emails:{...ST.drafts},sentEmails:[],openedEmails:[],replied:false,replyContent:'',currentStep:1,nextReminder:next.toISOString(),createdAt:now.toISOString(),ci:ST.prospects.length%AVC.length};
+      const now=new Date();const next=now;
+      const newProspect={id:p.id||Date.now(),...p,emails:{...ST.drafts},sentEmails:[],openedEmails:[],replied:false,replyContent:'',currentStep:1,nextReminder:now.toISOString(),createdAt:now.toISOString(),ci:ST.prospects.length%AVC.length};
       ST.prospects.push(newProspect);
       p=newProspect;ST.prospect=newProspect;
     }else{
@@ -1335,6 +1356,7 @@ function openModal(id){
   let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;padding:11px;background:var(--s2);border-radius:var(--rs)">`;
   [['Email',p.email||'—'],['Secteur',p.secteur||'—'],['Statut',p.replied?'✅ A répondu':p.openedEmails?.length?'👁 A ouvert':p.sentEmails?.length?'📤 Envoyé':'Nouveau'],['Créé le',new Date(p.createdAt).toLocaleDateString('fr-FR')]].forEach(([l,val])=>html+=`<div><div style="font-size:9px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">${l}</div><div style="font-size:12.5px">${val}</div></div>`);
   html+='</div>';
+
   // Bouton générer séquence si aucun email généré
   const hasEmails=p.emails&&Object.keys(p.emails).length>0;
   if(!hasEmails){
@@ -1473,20 +1495,34 @@ function insertSlotsInModalEmail(id,step){
   if(!textarea)return;
   const currentText=textarea.value;
 
-  const slotsText='\n\nJe vous propose les créneaux suivants pour un échange de 20 minutes :\n'
-    +slots.map(s=>`  • ${s.full}`).join('\n')
-    +'\n\nN\'hésitez pas à me suggérer un autre moment si ces créneaux ne vous conviennent pas.';
+  const slotsText='\n\nVoici mes disponibilités pour un échange de 20 minutes :\n'
+    +slots.map(s=>`• ${s.full||s.date+' à '+s.time}`).join('\n');
 
-  // Insérer avant la signature (dernière occurrence de la signature ou en fin de texte)
-  const sigMarker='Benjamin Gagnadre';
-  const sigIndex=currentText.lastIndexOf(sigMarker);
+  // Chercher la phrase qui propose le RDV (même logique que la page Nouveau prospect)
+  const rdvKeywords=['20 minutes','20min','rendez-vous','disponible','créneau','échange'];
+  let insertIndex=-1;
+  const lines=currentText.split('\n');
+  for(let i=0;i<lines.length;i++){
+    if(rdvKeywords.some(kw=>lines[i].toLowerCase().includes(kw))){
+      insertIndex=i;break;
+    }
+  }
+
   let newText;
-  if(sigIndex!==-1){
-    const before=currentText.substring(0,sigIndex).trimEnd();
-    const after=currentText.substring(sigIndex);
+  if(insertIndex!==-1){
+    // Insérer après la ligne de proposition de RDV
+    const before=lines.slice(0,insertIndex+1).join('\n');
+    const after=lines.slice(insertIndex+1).join('\n').trimStart();
     newText=before+slotsText+'\n\n'+after;
   }else{
-    newText=currentText.trimEnd()+slotsText;
+    // Fallback : insérer avant la signature
+    const sigIndex=currentText.lastIndexOf(SIGNATURE);
+    if(sigIndex!==-1){
+      const before=currentText.substring(0,sigIndex).trimEnd();
+      newText=before+slotsText+'\n\n'+SIGNATURE;
+    }else{
+      newText=currentText.trimEnd()+slotsText;
+    }
   }
   textarea.value=newText;
 
@@ -1606,9 +1642,22 @@ function renderTracking(){
       <div class="pb" style="margin-top:6px"><div class="pf" style="width:${rate}%;background:${colors[i-1]}"></div></div>`;
   }
 
-  // Tableau détail
+  // Alimenter le select entreprises
+  const sel=document.getElementById('tf-entreprise');
+  if(sel){
+    const cur=sel.value;
+    const companies=[...new Set(ST.prospects.map(p=>p.entreprise).filter(Boolean))].sort();
+    sel.innerHTML='<option value="">Toutes les entreprises</option>'+companies.map(c=>`<option value="${c}">${c}</option>`).join('');
+    if(cur)sel.value=cur;
+  }
+
+  // Tableau détail — rendu via filtres
+  applyTrackingFilters();
+}
+
+function renderTrackingRows(prospects){
   const tb=document.getElementById('t-tbody');tb.innerHTML='';
-  ST.prospects.forEach(p=>{
+  prospects.forEach(p=>{
     const ini=((p.prenom?.[0]||'')+(p.nom?.[0]||'')).toUpperCase()||'?';
     const ac=AVC[p.ci||0];
     let cells='';
@@ -1616,6 +1665,45 @@ function renderTracking(){
     cells+=`<td style="text-align:center">${p.replied?'<span style="font-size:13px">💬</span>':'<span style="color:var(--border)">—</span>'}</td>`;
     tb.innerHTML+=`<tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av ${ac}" style="width:24px;height:24px;font-size:9px">${ini}</div><div><div style="font-weight:500;font-size:12px">${p.prenom} ${p.nom}</div><div style="font-size:10.5px;color:var(--tm)">${p.entreprise||'—'}</div></div></div></td>${cells}</tr>`;
   });
+}
+
+function applyTrackingFilters(){
+  const search=(document.getElementById('tf-search')?.value||'').toLowerCase();
+  const status=document.getElementById('tf-status')?.value||'';
+  const entreprise=document.getElementById('tf-entreprise')?.value||'';
+
+  let filtered=ST.prospects.filter(p=>{
+    // Recherche texte
+    if(search){
+      const hay=`${p.prenom} ${p.nom} ${p.entreprise} ${p.email}`.toLowerCase();
+      if(!hay.includes(search))return false;
+    }
+    // Filtre entreprise
+    if(entreprise&&p.entreprise!==entreprise)return false;
+    // Filtre statut
+    if(status==='replied'&&!p.replied)return false;
+    if(status==='opened'&&!(p.openedEmails?.length>0))return false;
+    if(status==='sent'&&!(p.sentEmails?.length>0))return false;
+    if(status==='none'&&(p.sentEmails?.length>0||p.replied))return false;
+    return true;
+  });
+
+  renderTrackingRows(filtered);
+
+  // Compteur
+  const cnt=document.getElementById('tf-count');
+  if(cnt)cnt.textContent=filtered.length+' / '+ST.prospects.length;
+
+  // Message vide
+  const empty=document.getElementById('tf-empty');
+  if(empty)empty.style.display=filtered.length===0?'block':'none';
+}
+
+function resetTrackingFilters(){
+  const s=document.getElementById('tf-search');if(s)s.value='';
+  const st=document.getElementById('tf-status');if(st)st.value='';
+  const e=document.getElementById('tf-entreprise');if(e)e.value='';
+  applyTrackingFilters();
 }
 
 // ===================== EMAIL ACTIONS =====================
