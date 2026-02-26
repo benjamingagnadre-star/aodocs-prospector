@@ -253,6 +253,8 @@
   .filter-count{font-size:12px;font-weight:600;color:var(--tm);white-space:nowrap;padding:6px 12px;background:var(--s2);border-radius:20px;}
   .filter-reset{background:none;border:none;color:var(--tl);font-size:12px;cursor:pointer;padding:6px 8px;border-radius:5px;font-family:'Inter',sans-serif;font-weight:500;transition:all .12s;}
   .filter-reset:hover{background:var(--err-bg);color:var(--err);}
+  .fs-cb{accent-color:var(--accent);width:14px;height:14px;cursor:pointer;}
+  .fe-cb{accent-color:var(--accent);width:14px;height:14px;cursor:pointer;}
   .sort-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:6px;border:1.5px solid var(--border);background:var(--white);color:var(--tm);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s;white-space:nowrap;}
   .sort-btn:hover,.sort-btn.active{border-color:var(--accent);color:var(--accent);background:var(--al);}
 
@@ -307,34 +309,20 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       Tableau de bord
     </div>
+    <div class="ni" onclick="go('pg-settings')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Paramètres
+    </div>
   </nav>
   <div class="sbot">
-    <div class="albl">Clé API Claude</div>
-    <div class="awrap">
-      <input type="password" class="ainput" id="apiKey" placeholder="sk-ant-...">
-      <button class="asave" onclick="saveKey()">OK</button>
-    </div>
-    <div class="astat" id="apiStatus"></div>
-    <div class="albl" style="display:flex;align-items:center;gap:4px;margin-top:8px">📧 URL Apps Script</div>
-    <div class="awrap">
-      <input type="text" class="ainput" id="gasUrl" placeholder="https://script.google.com/...">
-      <button class="asave" onclick="saveGasUrl()">OK</button>
-    </div>
-    <div class="astat" id="gasStatus"></div>
-    <div class="albl" style="display:flex;align-items:center;gap:4px;margin-top:8px">📅 Google Calendar ID</div>
-    <div class="awrap">
-      <input type="text" class="ainput" id="calId" placeholder="votre@gmail.com">
-      <button class="asave" onclick="saveCalId()">OK</button>
-    </div>
-    <div class="astat" id="calStatus"></div>
-    <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--bl)">
+    <div style="margin-bottom:10px">
       <button class="btn btn-s btn-sm" style="width:100%;justify-content:center" onclick="manualSync()">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
         Synchroniser avec Google Sheet
       </button>
       <div style="font-size:10px;color:var(--tl);margin-top:5px;text-align:center">Sauvegarde automatique à chaque action</div>
     </div>
-    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--bl)">
+    <div style="padding-top:10px;border-top:1px solid var(--bl)">
       <button onclick="logout()" style="width:100%;background:none;border:1.5px solid var(--border);border-radius:6px;padding:7px;font-size:11px;font-weight:600;color:var(--tm);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;" onmouseover="this.style.borderColor='#dc2626';this.style.color='#dc2626'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--tm)'">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Se déconnecter
@@ -352,6 +340,7 @@
     <div class="tabs" style="margin-top:16px">
       <button class="tab active" onclick="switchTab('manual',this)">✍️ Saisie manuelle</button>
       <button class="tab" onclick="switchTab('linkedin',this)">🔗 Import LinkedIn</button>
+      <button class="tab" onclick="switchTab('exa',this)">🔍 Exa Websets</button>
       <button class="tab" onclick="switchTab('csv',this)">📂 Import CSV</button>
     </div>
 
@@ -363,10 +352,100 @@
           <div class="fg"><label>Prénom *</label><input id="m-pn" placeholder="Marie"></div>
           <div class="fg"><label>Nom *</label><input id="m-nm" placeholder="Dupont"></div>
           <div class="fg"><label>Fonction *</label><input id="m-fn" placeholder="DSI, DAF, Responsable IT..."></div>
-          <div class="fg"><label>Email professionnel</label><input type="email" id="m-em" placeholder="marie.dupont@entreprise.fr"></div>
+          <div class="fg">
+            <label style="display:flex;align-items:center;justify-content:space-between">
+              Email professionnel
+              <button onclick="lushaEnrichManual()" id="lusha-manual-btn" style="background:none;border:1px solid #e5e7eb;border-radius:4px;padding:2px 7px;font-size:11px;color:#6b7280;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px" title="Extraire l'email avec Lusha">
+                💼 Extraire avec Lusha
+              </button>
+            </label>
+            <div style="position:relative">
+              <input type="email" id="m-em" placeholder="marie.dupont@entreprise.fr">
+              <span id="lusha-manual-status" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px"></span>
+            </div>
+          </div>
           <div class="fg"><label>Entreprise *</label><input id="m-en" placeholder="Nom de l'entreprise"></div>
           <div class="fg"><label>Secteur d'activité</label><input id="m-se" placeholder="Industrie, Finance, Santé..."></div>
           <div class="fg full"><label>Actualité / contexte <span style="font-weight:400;color:var(--tl)">(recommandé)</span></label><textarea id="m-cx" placeholder="Transformation digitale, migration Google Workspace, croissance rapide, acquisition..."></textarea></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- EXA WEBSETS -->
+    <div id="tab-exa" style="display:none">
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ci ci-b">🔍</div> Recherche Exa Websets</div></div>
+        <div class="ib ib-b">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Décrivez les prospects que vous cherchez en langage naturel. Exa trouve les profils sur le web, Claude extrait les informations de contact.
+        </div>
+        <div class="fg">
+          <label>Décrivez vos prospects idéaux</label>
+          <textarea id="exa-query" style="min-height:80px;resize:vertical" placeholder="Ex: DSI ou Responsable IT de PME industrielles françaises de 50 à 500 salariés gérant de la documentation réglementaire"></textarea>
+        </div>
+        <div class="fg2" style="margin-top:8px">
+          <div class="fg">
+            <label>Nombre de contacts</label>
+            <select id="exa-count" style="border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 10px;font-size:13px;width:100%;background:var(--white)">
+              <option value="10">10 contacts</option>
+              <option value="15" selected>15 contacts</option>
+              <option value="20">20 contacts</option>
+              <option value="25">25 contacts</option>
+            </select>
+          </div>
+
+        </div>
+        <button class="btn btn-p" style="margin-top:12px" onclick="searchExa()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Lancer la recherche Exa
+        </button>
+      </div>
+
+      <!-- Progression -->
+      <div id="exa-progress" style="display:none">
+        <div class="card">
+          <div class="ch"><div class="ct"><div class="ci ci-b">⏳</div> Recherche en cours...</div></div>
+          <div style="font-size:13px;color:var(--tm);margin-bottom:12px" id="exa-status-msg">Création du Webset...</div>
+          <div style="background:var(--s2);border-radius:99px;height:8px;overflow:hidden">
+            <div id="exa-bar" style="background:var(--accent);height:100%;width:0%;transition:width .4s;border-radius:99px"></div>
+          </div>
+          <div style="font-size:11px;color:var(--tl);margin-top:6px;text-align:center" id="exa-bar-label">0%</div>
+        </div>
+      </div>
+
+      <!-- Résultats -->
+      <div id="exa-results" style="display:none">
+        <div class="card">
+          <div class="ch"><div class="ct"><div class="ci ci-g">✅</div> <span id="exa-result-count">0</span> contacts trouvés</div></div>
+          <div style="max-height:320px;overflow:auto;margin-bottom:12px">
+            <table style="width:100%;font-size:11.5px;border-collapse:collapse" id="exa-table">
+              <thead style="background:var(--s2);position:sticky;top:0">
+                <tr>
+                  <th style="padding:6px 8px;text-align:left;font-weight:600">Prénom</th>
+                  <th style="padding:6px 8px;text-align:left;font-weight:600">Nom</th>
+                  <th style="padding:6px 8px;text-align:left;font-weight:600">Fonction</th>
+                  <th style="padding:6px 8px;text-align:left;font-weight:600">Entreprise</th>
+                  <th style="padding:6px 8px;text-align:left;font-weight:600">Email</th>
+                  <th style="padding:6px 8px;text-align:left;font-weight:600">LinkedIn</th>
+                  <th style="padding:6px 8px;text-align:center;font-weight:600">Lusha</th>
+                  <th style="padding:6px 8px;text-align:center;font-weight:600">Suppr.</th>
+                </tr>
+              </thead>
+              <tbody id="exa-tbody"></tbody>
+            </table>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-ok" onclick="importExaProspects()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>
+              Importer tous les contacts
+            </button>
+            <button class="btn btn-p" id="enrich-all-btn" onclick="enrichAllWithLusha()">
+              💼 Enrichir tous avec Lusha
+            </button>
+            <button class="btn btn-s" onclick="resetExa()">Nouvelle recherche</button>
+          </div>
+          <div id="lusha-queue-status" style="display:none;font-size:11px;color:var(--tm);margin-top:8px;text-align:center"></div>
         </div>
       </div>
     </div>
@@ -549,25 +628,34 @@
         <svg class="filter-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="f-search" placeholder="Rechercher un nom, email, entreprise..." oninput="applyFilters()">
       </div>
-      <select class="filter-select" id="f-status" onchange="applyFilters()">
-        <option value="">Tous les statuts</option>
-        <option value="new">Nouveau</option>
-        <option value="sent">En cours</option>
-        <option value="opened">Ouvert</option>
-        <option value="pending">À relancer</option>
-        <option value="replied">A répondu</option>
-      </select>
-      <select class="filter-select" id="f-entreprise" onchange="applyFilters()">
-        <option value="">Toutes les entreprises</option>
-      </select>
+      <!-- Multi-select Statut -->
+      <div style="position:relative" id="wrap-status">
+        <button onclick="toggleDropdown('dd-status')" id="btn-status" style="background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:8px 30px 8px 11px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 9px center;min-width:130px;text-align:left" id="lbl-status">Tous les statuts</button>
+        <div id="dd-status" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1.5px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:200;min-width:180px;padding:6px 0">
+          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="new" onchange="applyFilters()" class="fs-cb"> Nouveau</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="sent" onchange="applyFilters()" class="fs-cb"> En cours</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="opened" onchange="applyFilters()" class="fs-cb"> Ouvert</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="pending" onchange="applyFilters()" class="fs-cb"> À relancer</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="replied" onchange="applyFilters()" class="fs-cb"> A répondu</label>
+        </div>
+      </div>
+      <!-- Multi-select Entreprise -->
+      <div style="position:relative" id="wrap-entreprise">
+        <button onclick="toggleDropdown('dd-entreprise')" style="background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:8px 30px 8px 11px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 9px center;min-width:160px;text-align:left" id="lbl-entreprise">Toutes les entreprises</button>
+        <div id="dd-entreprise" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1.5px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:200;min-width:200px;padding:6px 0;max-height:240px;overflow-y:auto" id="dd-entreprise-list">
+        </div>
+      </div>
       <span class="filter-count" id="f-count">0 prospect</span>
       <button class="filter-reset" onclick="resetFilters()" title="Effacer les filtres">✕ Effacer</button>
+      <button id="btn-del-sel" onclick="deleteSelected()" style="display:none;background:#fee2e2;border:1.5px solid #fca5a5;border-radius:6px;padding:7px 12px;color:#dc2626;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s" onmouseover="this.style.background='#fca5a5'" onmouseout="this.style.background='#fee2e2'">
+        🗑 Supprimer la sélection (<span id="sel-count">0</span>)
+      </button>
     </div>
 
     <div class="card" style="padding:0;overflow:hidden">
       <div class="tw">
         <table>
-          <thead><tr><th>Contact</th><th>Entreprise</th><th>Fonction</th><th>Séquence</th><th>Statut</th><th>Prochain envoi</th><th></th></tr></thead>
+          <thead><tr><th style="width:32px;padding:8px 6px"><input type="checkbox" id="select-all-cb" onclick="toggleSelectAll(this)" style="accent-color:var(--accent);cursor:pointer"></th><th>Contact</th><th>Entreprise</th><th>Fonction</th><th>Séquence</th><th>Statut</th><th>Prochain envoi</th><th></th></tr></thead>
           <tbody id="p-tbody"></tbody>
         </table>
       </div>
@@ -581,6 +669,32 @@
 <div class="page" id="pg-reminders">
   <div class="topbar"><div><div class="tb-title">Rappels</div><div class="tb-sub">Séquences en attente, triées par urgence</div></div></div>
   <div style="margin-top:16px">
+    <div class="filter-bar" style="margin-bottom:12px">
+      <div class="filter-search">
+        <svg class="filter-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="rem-search" placeholder="Rechercher un nom, email, entreprise..." oninput="applyReminderFilters()">
+      </div>
+      <!-- Multi-select Urgence -->
+      <div style="position:relative" id="wrap-urgence">
+        <button onclick="toggleDropdown('dd-urgence')" id="lbl-urgence" style="background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:8px 30px 8px 11px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 9px center;min-width:150px;text-align:left">Toutes les urgences</button>
+        <div id="dd-urgence" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1.5px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:200;min-width:180px;padding:6px 0">
+          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="urgent" onchange="applyReminderFilters()" class="fr-urg-cb" style="accent-color:var(--accent);width:14px;height:14px;cursor:pointer"> Urgent / En retard</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="upcoming" onchange="applyReminderFilters()" class="fr-urg-cb" style="accent-color:var(--accent);width:14px;height:14px;cursor:pointer"> Dans 2 jours</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="normal" onchange="applyReminderFilters()" class="fr-urg-cb" style="accent-color:var(--accent);width:14px;height:14px;cursor:pointer"> Planifié</label>
+        </div>
+      </div>
+      <!-- Multi-select Entreprise Rappels -->
+      <div style="position:relative" id="wrap-rem-entreprise">
+        <button onclick="toggleDropdown('dd-rem-entreprise')" id="lbl-rem-entreprise" style="background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:8px 30px 8px 11px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 9px center;min-width:160px;text-align:left">Toutes les entreprises</button>
+        <div id="dd-rem-entreprise" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1.5px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:200;min-width:180px;padding:6px 0;max-height:240px;overflow-y:auto">
+        </div>
+      </div>
+      <span class="filter-count" id="rem-count">0 rappel</span>
+      <button class="filter-reset" onclick="resetReminderFilters()" title="Effacer les filtres">✕ Effacer</button>
+      <button id="btn-del-rem" onclick="deleteSelectedReminders()" style="display:none;background:#fee2e2;border:1.5px solid #fca5a5;border-radius:6px;padding:7px 12px;color:#dc2626;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit" onmouseover="this.style.background='#fca5a5'" onmouseout="this.style.background='#fee2e2'">
+        🗑 Supprimer la sélection (<span id="rem-sel-count">0</span>)
+      </button>
+    </div>
     <div id="rem-list"></div>
     <div class="empty" id="rem-empty" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:var(--r)">
       <div class="empty-ic">✅</div><div class="empty-t">Tout est à jour !</div><div class="empty-s">Aucun rappel en attente.</div>
@@ -601,6 +715,18 @@
     <div class="ib ib-v" style="margin-bottom:14px">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       Les réponses sont détectées via Google Apps Script en cherchant dans votre Gmail les emails des prospects. Cliquez "Vérifier" pour synchroniser.
+    </div>
+    <div class="filter-bar" style="margin-bottom:12px">
+      <div class="filter-search">
+        <svg class="filter-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="rep-search" placeholder="Rechercher un nom, email, entreprise..." oninput="applyRepliesFilter()">
+      </div>
+      <span class="filter-count" id="rep-count"></span>
+    </div>
+    <div id="replies-action-bar" style="display:none;background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-bottom:10px;display:none;align-items:center;gap:10px">
+      <span style="font-size:13px;font-weight:600;color:#dc2626"><span id="rep-sel-count">0</span> sélectionné(s)</span>
+      <button onclick="deleteSelectedReplies()" style="background:#dc2626;border:none;border-radius:6px;padding:6px 12px;color:white;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">🗑 Supprimer</button>
+      <button onclick="cancelRepSelection()" style="background:none;border:1.5px solid #fca5a5;border-radius:6px;padding:6px 10px;color:#dc2626;font-size:12px;cursor:pointer;font-family:inherit">Annuler</button>
     </div>
     <div id="replies-list"></div>
     <div class="empty" id="replies-empty">
@@ -660,16 +786,22 @@
             <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#9ca3af;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input id="tf-search" type="text" placeholder="Rechercher…" oninput="applyTrackingFilters()" style="padding:6px 10px 6px 30px;font-size:12px;border:1.5px solid var(--border);border-radius:6px;width:155px;outline:none;font-family:Inter,sans-serif" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
           </div>
-          <select id="tf-status" class="filter-select" style="font-size:12px;padding:6px 26px 6px 10px" onchange="applyTrackingFilters()">
-            <option value="">Tous les statuts</option>
-            <option value="replied">💬 A répondu</option>
-            <option value="opened">✅ A ouvert</option>
-            <option value="sent">📤 Email envoyé</option>
-            <option value="none">— Pas démarré</option>
-          </select>
-          <select id="tf-entreprise" class="filter-select" style="font-size:12px;padding:6px 26px 6px 10px" onchange="applyTrackingFilters()">
-            <option value="">Toutes les entreprises</option>
-          </select>
+          <!-- Multi-select Statut Tracking -->
+          <div style="position:relative" id="wrap-tf-status">
+            <button onclick="toggleDropdown('dd-tf-status')" id="lbl-tf-status" style="background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:6px 26px 6px 10px;color:var(--text);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 8px center;min-width:130px;text-align:left">Tous les statuts</button>
+            <div id="dd-tf-status" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1.5px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:200;min-width:180px;padding:6px 0">
+              <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="replied" onchange="applyTrackingFilters()" class="ft-st-cb"> 💬 A répondu</label>
+              <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="opened" onchange="applyTrackingFilters()" class="ft-st-cb"> ✅ A ouvert</label>
+              <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="sent" onchange="applyTrackingFilters()" class="ft-st-cb"> 📤 Email envoyé</label>
+              <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="none" onchange="applyTrackingFilters()" class="ft-st-cb"> — Pas démarré</label>
+            </div>
+          </div>
+          <!-- Multi-select Entreprise Tracking -->
+          <div style="position:relative" id="wrap-tf-entreprise">
+            <button onclick="toggleDropdown('dd-tf-entreprise')" id="lbl-tf-entreprise" style="background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:6px 26px 6px 10px;color:var(--text);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 8px center;min-width:155px;text-align:left">Toutes les entreprises</button>
+            <div id="dd-tf-entreprise" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:white;border:1.5px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:200;min-width:200px;padding:6px 0;max-height:240px;overflow-y:auto">
+            </div>
+          </div>
           <span id="tf-count" style="font-size:11px;font-weight:600;color:var(--tm);white-space:nowrap;padding:5px 10px;background:var(--s2);border-radius:20px"></span>
           <button onclick="resetTrackingFilters()" title="Effacer" style="background:none;border:none;color:var(--tl);font-size:12px;cursor:pointer;padding:5px 7px;border-radius:5px;font-family:Inter,sans-serif;font-weight:500" onmouseover="this.style.background='var(--err-bg)';this.style.color='var(--err)'" onmouseout="this.style.background='none';this.style.color='var(--tl)'">✕ Effacer</button>
         </div>
@@ -682,6 +814,76 @@
       </div>
       <div id="tf-empty" style="display:none;text-align:center;padding:28px;color:var(--tm);font-size:13px">Aucun prospect ne correspond aux filtres.</div>
     </div>
+  </div>
+</div>
+
+
+<!-- PAGE: PARAMÈTRES -->
+<div class="page" id="pg-settings">
+  <div class="topbar">
+    <div>
+      <div class="tb-title">Paramètres</div>
+      <div class="tb-sub">Configurez vos clés API et intégrations</div>
+    </div>
+  </div>
+
+  <div style="max-width:600px;display:flex;flex-direction:column;gap:16px;padding-bottom:32px">
+
+    <!-- Clé Claude -->
+    <div class="card">
+      <div class="ch"><div class="ct"><div class="ci ci-b">🤖</div> API Claude</div></div>
+      <div class="fg">
+        <label>Clé API Claude</label>
+        <div class="awrap"><input type="password" class="ainput" id="apiKey" placeholder="sk-ant-..."><button class="asave" onclick="saveKey()">OK</button></div>
+        <div class="astat" id="apiStatus"></div>
+        <div style="font-size:11px;color:var(--tl);margin-top:4px">Obtenez votre clé sur console.anthropic.com → API Keys</div>
+      </div>
+    </div>
+
+    <!-- Google Apps Script -->
+    <div class="card">
+      <div class="ch"><div class="ct"><div class="ci ci-b">📧</div> Google Apps Script</div></div>
+      <div class="fg">
+        <label>URL de déploiement</label>
+        <div class="awrap"><input type="text" class="ainput" id="gasUrl" placeholder="https://script.google.com/..."><button class="asave" onclick="saveGasUrl()">OK</button></div>
+        <div class="astat" id="gasStatus"></div>
+        <div style="font-size:11px;color:var(--tl);margin-top:4px">Permet l'envoi d'emails Gmail et la sync Google Sheets</div>
+      </div>
+    </div>
+
+    <!-- Google Calendar -->
+    <div class="card">
+      <div class="ch"><div class="ct"><div class="ci ci-b">📅</div> Google Calendar</div></div>
+      <div class="fg">
+        <label>Calendar ID</label>
+        <div class="awrap"><input type="text" class="ainput" id="calId" placeholder="votre@gmail.com"><button class="asave" onclick="saveCalId()">OK</button></div>
+        <div class="astat" id="calStatus"></div>
+        <div style="font-size:11px;color:var(--tl);margin-top:4px">Votre email Google = votre Calendar ID principal</div>
+      </div>
+    </div>
+
+    <!-- Exa -->
+    <div class="card">
+      <div class="ch"><div class="ct"><div class="ci ci-b">🔍</div> Exa Search</div></div>
+      <div class="fg">
+        <label>Clé API Exa</label>
+        <div class="awrap"><input type="password" class="ainput" id="exaKey" placeholder="exa-..."><button class="asave" onclick="saveExaKey()">OK</button></div>
+        <div class="astat" id="exaStatus"></div>
+        <div style="font-size:11px;color:var(--tl);margin-top:4px">Obtenez votre clé gratuite sur dashboard.exa.ai → API Keys</div>
+      </div>
+    </div>
+
+    <!-- Lusha -->
+    <div class="card">
+      <div class="ch"><div class="ct"><div class="ci ci-b">💼</div> Lusha</div></div>
+      <div class="fg">
+        <label>Clé API Lusha</label>
+        <div class="awrap"><input type="password" class="ainput" id="lushaKey" placeholder="lusha-..."><button class="asave" onclick="saveLushaKey()">OK</button></div>
+        <div class="astat" id="lushaStatus"></div>
+        <div style="font-size:11px;color:var(--tl);margin-top:4px">Disponible dans votre compte Lusha → Settings → API</div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -705,8 +907,8 @@ const AVC=['av-b','av-g','av-v','av-o','av-p','av-t'];
 let ST={prospects:[],seq:1,prospect:null,drafts:{}};
 let selectedSlots=[];
 
-const GAS_URL = "https://script.google.com/macros/s/AKfycbyTu082npHrQCGlTAcIrVYMZ_WkPFeQY5jrAUwx9GMlWVsZAnYTLKCMwsVWjWiNCA3R/exec";
-const CLAUDE_KEY = localStorage.getItem('aodocs_key') || "";
+function getGasUrl(){return localStorage.getItem('aodocs_gas')||"";}
+function getClaudeKey(){return localStorage.getItem('aodocs_key')||"";}
 
 const SIGNATURE=`Bien cordialement,
 
@@ -715,8 +917,8 @@ Tél : +33 6 32 37 90 12
 benjamin.gagnadre@aodocs.com
 www.aodocs.com`;
 
-const AODOCS=`AODocs est une plateforme ECM/DMS basée sur Google Workspace. Elle structure, contrôle et automatise la gestion documentaire en finance, industrie, sciences de la vie, secteur public.
-Valeurs: remplacement drives non structurés, conformité (ISO/FDA/GDPR/SOX), workflows validation, intégration Google Workspace, audit trail, remplacement legacy (FileNet/Documentum/SharePoint), IA pour automatisation.
+const AODOCS=`AODocs est une plateforme ECM/DMS qui s'intègre avec les principaux environnements de travail (Google Workspace, Microsoft 365 et autres). Elle structure, contrôle et automatise la gestion documentaire en finance, industrie, sciences de la vie, secteur public.
+Valeurs: remplacement drives non structurés, conformité (ISO/FDA/GDPR/SOX), workflows validation, intégration Google Workspace et Microsoft 365, audit trail, remplacement legacy (FileNet/Documentum/SharePoint), IA pour automatisation.
 Problèmes résolus: données éparpillées, manque contrôle d'accès, absence workflow validation, non-conformité, perte documents, absence d'audit trail.`;
 
 const SEQP={
@@ -731,16 +933,22 @@ window.onload=()=>{
   const s=localStorage.getItem('aodocs_st');if(s)ST={...ST,...JSON.parse(s)};
   const k=localStorage.getItem('aodocs_key');
   if(k){document.getElementById('apiKey').value=k;setStatus('apiStatus','✓ Clé configurée','ok');}
-  document.getElementById('gasUrl').value=GAS_URL;setStatus('gasStatus','✓ URL configurée','ok');
+  const g=localStorage.getItem('aodocs_gas');
+  if(g){document.getElementById('gasUrl').value=g;setStatus('gasStatus','✓ URL configurée','ok');}
   const c=localStorage.getItem('aodocs_cal');
   if(c){document.getElementById('calId').value=c;setStatus('calStatus','✓ Calendar configuré','ok');}
-  if(!k){showSetupModal();}
+  if(!k||!g){showSetupModal();}
+  const ex=localStorage.getItem('aodocs_exa');
+  if(ex){document.getElementById('exaKey').value=ex;setStatus('exaStatus','✓ Clé Exa configurée','ok');}
+  const lu=localStorage.getItem('aodocs_lusha');
+  if(lu){document.getElementById('lushaKey').value=lu;setStatus('lushaStatus','✓ Clé Lusha configurée','ok');}
+
   refresh();
   loadFromSheet(); // Restaure depuis Google Sheet si localStorage vide
 };
 
 async function manualSync(){
-  const gasUrl=GAS_URL;
+  const gasUrl=getGasUrl();
   if(!gasUrl){toast('Configurez l\'URL Apps Script d\'abord','error');return;}
   if(!ST.prospects.length){toast('Aucun prospect à synchroniser','info');return;}
   try{
@@ -758,7 +966,7 @@ function save(){
 }
 
 async function loadFromSheet(){
-  const gasUrl=GAS_URL;
+  const gasUrl=getGasUrl();
   if(!gasUrl)return;
   // Charger depuis le Sheet uniquement si localStorage est vide
   const local=localStorage.getItem('aodocs_st');
@@ -858,7 +1066,7 @@ function resetCsv(){
 
 function switchTab(t,el){
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');
-  ['manual','linkedin','csv'].forEach(n=>{const d=document.getElementById('tab-'+n);if(d)d.style.display=t===n?'block':'none';});
+  ['manual','linkedin','csv','exa'].forEach(n=>{const d=document.getElementById('tab-'+n);if(d)d.style.display=t===n?'block':'none';});
   ST.prospect=null;ST.drafts={};document.getElementById('ep').style.display='none';
   document.getElementById('gen-progress').style.display='none';
   updatePills();
@@ -916,7 +1124,7 @@ function setStatus(id,msg,cls){const el=document.getElementById(id);el.textConte
 async function extractLN(){
   const text=document.getElementById('lnPaste').value.trim();
   if(!text){toast('Collez d\'abord le profil LinkedIn','error');return;}
-  const key=CLAUDE_KEY;if(!key){toast('Configurez votre clé API Claude','error');return;}
+  const key=getClaudeKey();if(!key){toast('Configurez votre clé API Claude','error');return;}
   const btn=event.target.closest('.btn');btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Extraction...';
   try{
     const r=await claude(key,`Extrait les infos de ce profil LinkedIn. Réponds UNIQUEMENT avec ce JSON sans backticks:\n{"prenom":"","nom":"","fonction":"","entreprise":"","secteur":"","email":"","contexte":""}\nContexte = résumé 2 phrases pour prospection.\n\n${text}`,500);
@@ -926,7 +1134,16 @@ async function extractLN(){
       <div class="fg"><label>Prénom</label><input id="e-pn" value="${esc(j.prenom)}"></div>
       <div class="fg"><label>Nom</label><input id="e-nm" value="${esc(j.nom)}"></div>
       <div class="fg"><label>Fonction</label><input id="e-fn" value="${esc(j.fonction)}"></div>
-      <div class="fg"><label>Email</label><input id="e-em" type="email" value="${esc(j.email)}"></div>
+      <div class="fg">
+        <label style="display:flex;align-items:center;justify-content:space-between">
+          Email
+          <button onclick="lushaEnrichLinkedin()" id="lusha-li-btn" style="background:none;border:1px solid #e5e7eb;border-radius:4px;padding:2px 7px;font-size:11px;color:#6b7280;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px">💼 Extraire avec Lusha</button>
+        </label>
+        <div style="position:relative">
+          <input id="e-em" type="email" value="${esc(j.email)}">
+          <span id="lusha-li-status" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px"></span>
+        </div>
+      </div>
       <div class="fg"><label>Entreprise</label><input id="e-en" value="${esc(j.entreprise)}"></div>
       <div class="fg"><label>Secteur</label><input id="e-se" value="${esc(j.secteur)}"></div>
       <div class="fg full"><label>Contexte</label><textarea id="e-cx">${esc(j.contexte)}</textarea></div>
@@ -945,7 +1162,7 @@ async function genEmail(){
   if(isM)ST.prospect=getManual();else if(document.getElementById('exf').style.display!=='none')syncEx();
   const p=ST.prospect;
   if(!p||(!p.prenom&&!p.nom&&!p.entreprise)){toast('Renseignez au moins le nom ou l\'entreprise','error');return;}
-  const key=CLAUDE_KEY;if(!key){toast('Configurez votre clé API Claude','error');return;}
+  const key=getClaudeKey();if(!key){toast('Configurez votre clé API Claude','error');return;}
   document.getElementById('ep').style.display='none';
   document.getElementById('gen-loading').style.display='flex';
   document.getElementById('gen-loading-num').textContent=ST.seq;
@@ -1013,7 +1230,7 @@ function showEP(subj,body){
 // ===================== GOOGLE CALENDAR =====================
 async function showCalSlots(){
   const calId=localStorage.getItem('aodocs_cal');
-  const gasUrl=GAS_URL;
+  const gasUrl=getGasUrl();
   if(!calId||!gasUrl){
     toast('Configurez le Calendar ID et l\'URL Apps Script d\'abord','error');return;
   }
@@ -1169,7 +1386,7 @@ async function sendViaGmail(prospectId,step){
       p=ST.prospects[existing];ST.prospect=p;
     }
   }
-  const gasUrl=GAS_URL;
+  const gasUrl=getGasUrl();
   if(!gasUrl){toast('Configurez l\'URL Apps Script d\'abord','error');return;}
   const btn=event?.target?.closest('.btn');
   if(btn){btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Envoi...';}
@@ -1191,7 +1408,7 @@ async function sendViaGmail(prospectId,step){
 
 // ===================== CHECK REPLIES =====================
 async function checkReplies(){
-  const gasUrl=GAS_URL;
+  const gasUrl=getGasUrl();
   if(!gasUrl){toast('Configurez l\'URL Apps Script d\'abord','error');return;}
   const btn=event.target.closest('.btn');btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Vérification...';
   try{
@@ -1220,22 +1437,37 @@ async function checkReplies(){
 }
 
 function renderReplies(){
+  applyRepliesFilter();
+}
+
+function applyRepliesFilter(){
   const c=document.getElementById('replies-list');const em=document.getElementById('replies-empty');
-  const replied=ST.prospects.filter(p=>p.replied);
+  const search=(document.getElementById('rep-search')?.value||'').toLowerCase().trim();
+  let replied=ST.prospects.filter(p=>p.replied);
+  if(search) replied=replied.filter(p=>{
+    const hay=`${p.prenom} ${p.nom} ${p.email} ${p.entreprise} ${p.fonction}`.toLowerCase();
+    return hay.includes(search);
+  });
+  const cnt=document.getElementById('rep-count');
+  const total=ST.prospects.filter(p=>p.replied).length;
+  if(cnt)cnt.textContent=replied.length===total?`${total} réponse${total>1?'s':''}`:replied.length+' / '+total;
   if(!replied.length){em.style.display='block';c.innerHTML='';return;}
   em.style.display='none';
   c.innerHTML=replied.map(p=>{
-    const ini=((p.prenom?.[0]||'')+(p.nom?.[0]||'')).toUpperCase()||'?';
+    const ini=((p.prenom?.[0]||'')+( p.nom?.[0]||'')).toUpperCase()||'?';
     const ac=AVC[p.ci||0];
-    return `<div class="reply-item">
-      <div class="reply-avatar ${ac}" style="width:34px;height:34px;font-size:11px">${ini}</div>
-      <div class="reply-content">
-        <div class="reply-from">${p.prenom} ${p.nom} <span style="font-weight:400;color:var(--tm)">· ${p.entreprise||''}</span></div>
-        <div class="reply-preview">${esc(p.replyContent||'A répondu à votre email')}</div>
-        <div class="reply-date">${p.replyDate||'Date inconnue'}</div>
-        <div class="reply-badge">💬 Réponse reçue</div>
+    return `<div class="reply-item" style="position:relative">
+      <input type="checkbox" class="reply-cb" data-id="${p.id}" onclick="updateRepSelection(event)" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);accent-color:var(--accent);cursor:pointer;z-index:1;width:15px;height:15px">
+      <div style="padding-left:20px;display:flex;align-items:center;gap:10px;flex:1">
+        <div class="reply-avatar ${ac}" style="width:34px;height:34px;font-size:11px">${ini}</div>
+        <div class="reply-content">
+          <div class="reply-from">${p.prenom} ${p.nom} <span style="font-weight:400;color:var(--tm)">· ${p.entreprise||''}</span></div>
+          <div class="reply-preview">${esc(p.replyContent||'A répondu à votre email')}</div>
+          <div class="reply-date">${p.replyDate||'Date inconnue'}</div>
+          <div class="reply-badge">💬 Réponse reçue</div>
+        </div>
+        <button class="btn btn-s btn-xs" onclick="openModal(${p.id})">Voir la fiche</button>
       </div>
-      <button class="btn btn-s btn-xs" onclick="openModal(${p.id})">Voir la fiche</button>
     </div>`;
   }).join('');
 }
@@ -1244,10 +1476,13 @@ function renderReplies(){
 function renderProspects(){
   // Mettre à jour le filtre entreprise
   const companies=[...new Set(ST.prospects.map(p=>p.entreprise).filter(Boolean))].sort();
-  const fEnt=document.getElementById('f-entreprise');
-  if(fEnt){
-    const cur=fEnt.value;
-    fEnt.innerHTML='<option value="">Toutes les entreprises</option>'+companies.map(c=>`<option value="${esc(c)}"${cur===c?' selected':''}>${esc(c)}</option>`).join('');
+  const ddEnt=document.getElementById('dd-entreprise-list')||document.getElementById('dd-entreprise');
+  if(ddEnt){
+    const checked=getChecked('fe-cb');
+    ddEnt.innerHTML=companies.map(c=>`
+      <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''">
+        <input type="checkbox" value="${esc(c)}" onchange="applyFilters()" class="fe-cb"${checked.includes(c)?' checked':''}> ${esc(c)}
+      </label>`).join('');
   }
   applyFilters();
 }
@@ -1265,9 +1500,11 @@ function applyFilters(){
   emptyEl.style.display='none';
 
   const search=(document.getElementById('f-search')?.value||'').toLowerCase().trim();
-  const status=document.getElementById('f-status')?.value||'';
-  const entreprise=document.getElementById('f-entreprise')?.value||'';
+  const statuses=getChecked('fs-cb');
+  const entreprises=getChecked('fe-cb');
   const today=new Date();today.setHours(0,0,0,0);
+  updateFilterLabel('lbl-status', statuses, 'Tous les statuts', {'new':'Nouveau','sent':'En cours','opened':'Ouvert','pending':'À relancer','replied':'A répondu'});
+  updateFilterLabel('lbl-entreprise', entreprises, 'Toutes les entreprises');
 
   // FILTRAGE
   let filtered=ST.prospects.filter(p=>{
@@ -1276,18 +1513,22 @@ function applyFilters(){
       const hay=`${p.prenom} ${p.nom} ${p.email} ${p.entreprise} ${p.fonction} ${p.secteur}`.toLowerCase();
       if(!hay.includes(search))return false;
     }
-    // Entreprise
-    if(entreprise&&p.entreprise!==entreprise)return false;
-    // Statut
-    if(status){
+    // Entreprise (multi)
+    if(entreprises.length&&!entreprises.includes(p.entreprise||''))return false;
+    // Statut (multi)
+    if(statuses.length){
       const sc=p.sentEmails?.length||0;const oc=p.openedEmails?.length||0;
       const nd=p.nextReminder?new Date(p.nextReminder):null;if(nd)nd.setHours(0,0,0,0);
       const due=nd&&nd<=today&&sc<4;
-      if(status==='new'&&(sc>0||p.replied))return false;
-      if(status==='sent'&&!(sc>0&&!oc&&!due&&!p.replied))return false;
-      if(status==='opened'&&!(oc>0&&!p.replied))return false;
-      if(status==='pending'&&!due)return false;
-      if(status==='replied'&&!p.replied)return false;
+      const isNew=sc===0&&!p.replied;
+      const isSent=sc>0&&!oc&&!due&&!p.replied;
+      const isOpened=oc>0&&!p.replied;
+      const isPending=due&&!p.replied;
+      const isReplied=p.replied;
+      const match=statuses.some(s=>
+        (s==='new'&&isNew)||(s==='sent'&&isSent)||(s==='opened'&&isOpened)||(s==='pending'&&isPending)||(s==='replied'&&isReplied)
+      );
+      if(!match)return false;
     }
     return true;
   });
@@ -1318,6 +1559,7 @@ function applyFilters(){
     const ns=nd?nd.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'—';
     const nst=due?'color:var(--warn);font-weight:600':'color:var(--tm)';
     tb.innerHTML+=`<tr>
+      <td style="padding:8px 6px"><input type="checkbox" class="prospect-cb" data-id="${p.id}" onclick="updateSelection()" style="accent-color:var(--accent);cursor:pointer"></td>
       <td><div style="display:flex;align-items:center;gap:8px"><div class="av ${ac}" style="width:30px;height:30px;font-size:10px">${ini}</div><div><div style="font-weight:600;font-size:13px">${p.prenom} ${p.nom}</div><div style="font-size:10.5px;color:var(--tm)">${p.email||'—'}</div></div></div></td>
       <td style="font-weight:500;font-size:13px">${p.entreprise||'—'}</td>
       <td style="color:var(--tm);font-size:12px">${p.fonction||'—'}</td>
@@ -1329,11 +1571,173 @@ function applyFilters(){
   });
 }
 
+
+
+// ---- Sélection multiple Rappels ----
+function updateRemSelection(e){
+  e.stopPropagation();
+  const selected=document.querySelectorAll('.reminder-cb:checked');
+  const btn=document.getElementById('btn-del-rem');
+  const cnt=document.getElementById('rem-sel-count');
+  if(btn)btn.style.display=selected.length>0?'inline-flex':'none';
+  if(cnt)cnt.textContent=selected.length;
+}
+
+
+async function lushaEnrichLinkedin(){
+  const lushaKey=getLushaKey();
+  if(!lushaKey){toast('Configurez votre clé API Lusha dans Paramètres','error');return;}
+  const prenom=document.getElementById('e-pn')?.value.trim();
+  const nom=document.getElementById('e-nm')?.value.trim();
+  const entreprise=document.getElementById('e-en')?.value.trim();
+  if(!prenom||!nom){toast('Prénom et nom requis','error');return;}
+
+  const btn=document.getElementById('lusha-li-btn');
+  const status=document.getElementById('lusha-li-status');
+  btn.textContent='⏳ ...';btn.disabled=true;
+  if(status)status.textContent='';
+
+  try{
+    const params=new URLSearchParams();
+    params.append('firstName',prenom);
+    params.append('lastName',nom);
+    if(entreprise)params.append('companyName',entreprise);
+    const apiUrl='https://api.lusha.com/v2/person?'+params.toString();
+    const proxyUrl='https://corsproxy.io/?url='+encodeURIComponent(apiUrl);
+    const resp=await fetch(proxyUrl,{method:'GET',headers:{'api_key':lushaKey,'Content-Type':'application/json'}});
+    if(!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error(err.message||('Lusha HTTP '+resp.status));}
+    const data=await resp.json();
+    const emails=(data.data&&data.data.emailAddresses)||[];
+    const proEmail=emails.find(e=>e.type==='professional'||e.type==='business');
+    const email=(proEmail||emails[0]||{}).email||'';
+    if(email){
+      document.getElementById('e-em').value=email;
+      if(status){status.textContent='✓';status.style.color='#059669';}
+      toast('Email trouvé : '+email,'success');
+    } else {
+      if(status){status.textContent='✗';status.style.color='#dc2626';}
+      toast('Aucun email trouvé','info');
+    }
+  }catch(err){
+    if(status){status.textContent='✗';status.style.color='#dc2626';}
+    toast('Erreur Lusha : '+err.message,'error');
+  }finally{
+    btn.innerHTML='💼 Extraire avec Lusha';btn.disabled=false;
+  }
+}
+
+async function lushaEnrichManual(){
+  const lushaKey=getLushaKey();
+  if(!lushaKey){toast('Configurez votre clé API Lusha dans Paramètres','error');return;}
+  const prenom=document.getElementById('m-pn').value.trim();
+  const nom=document.getElementById('m-nm').value.trim();
+  const entreprise=document.getElementById('m-en').value.trim();
+  if(!prenom||!nom){toast('Renseignez d abord le prénom et le nom','error');return;}
+
+  const btn=document.getElementById('lusha-manual-btn');
+  const status=document.getElementById('lusha-manual-status');
+  btn.textContent='⏳ ...';btn.disabled=true;
+  if(status)status.textContent='';
+
+  try{
+    let params=new URLSearchParams();
+    if(entreprise){
+      params.append('firstName',prenom);
+      params.append('lastName',nom);
+      params.append('companyName',entreprise);
+    } else {
+      params.append('firstName',prenom);
+      params.append('lastName',nom);
+    }
+    const apiUrl='https://api.lusha.com/v2/person?'+params.toString();
+    const proxyUrl='https://corsproxy.io/?url='+encodeURIComponent(apiUrl);
+    const resp=await fetch(proxyUrl,{method:'GET',headers:{'api_key':lushaKey,'Content-Type':'application/json'}});
+    if(!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error(err.message||('Lusha HTTP '+resp.status));}
+    const data=await resp.json();
+    const emails=(data.data&&data.data.emailAddresses)||[];
+    const proEmail=emails.find(e=>e.type==='professional'||e.type==='business');
+    const email=(proEmail||emails[0]||{}).email||'';
+    if(email){
+      document.getElementById('m-em').value=email;
+      if(status){status.textContent='✓';status.style.color='#059669';}
+      toast('Email trouvé : '+email,'success');
+    } else {
+      if(status){status.textContent='✗';status.style.color='#dc2626';}
+      toast('Aucun email trouvé','info');
+    }
+  }catch(err){
+    if(status){status.textContent='✗';status.style.color='#dc2626';}
+    toast('Erreur Lusha : '+err.message,'error');
+  }finally{
+    btn.innerHTML='💼 Extraire avec Lusha';btn.disabled=false;
+  }
+}
+
+function deleteSelectedReminders(){
+  const selected=[...document.querySelectorAll('.reminder-cb:checked')].map(cb=>Number(cb.dataset.id));
+  if(!selected.length)return;
+  if(!confirm('Supprimer '+selected.length+' prospect(s) ?'))return;
+  ST.prospects=ST.prospects.filter(p=>!selected.includes(p.id));
+  save();renderProspects();renderReminders();renderTracking();
+  toast('🗑 '+selected.length+' prospect(s) supprimé(s)','success');
+}
+
+// ---- Sélection multiple Réponses ----
+function updateRepSelection(e){
+  e.stopPropagation();
+  const selected=document.querySelectorAll('.reply-cb:checked');
+  const bar=document.getElementById('replies-action-bar');
+  const cnt=document.getElementById('rep-sel-count');
+  if(bar)bar.style.display=selected.length>0?'flex':'none';
+  if(cnt)cnt.textContent=selected.length;
+}
+function cancelRepSelection(){
+  document.querySelectorAll('.reply-cb').forEach(cb=>cb.checked=false);
+  const bar=document.getElementById('replies-action-bar');
+  if(bar)bar.style.display='none';
+}
+function deleteSelectedReplies(){
+  const selected=[...document.querySelectorAll('.reply-cb:checked')].map(cb=>Number(cb.dataset.id));
+  if(!selected.length)return;
+  if(!confirm('Supprimer '+selected.length+' prospect(s) ?'))return;
+  ST.prospects=ST.prospects.filter(p=>!selected.includes(p.id));
+  save();renderProspects();renderReminders();renderReplies();renderTracking();
+  toast('🗑 '+selected.length+' prospect(s) supprimé(s)','success');
+}
+
+function toggleSelectAll(cb){
+  document.querySelectorAll('.prospect-cb').forEach(c=>c.checked=cb.checked);
+  updateSelection();
+}
+function updateSelection(){
+  const selected=document.querySelectorAll('.prospect-cb:checked');
+  const btn=document.getElementById('btn-del-sel');
+  const cnt=document.getElementById('sel-count');
+  const allCb=document.getElementById('select-all-cb');
+  const all=document.querySelectorAll('.prospect-cb');
+  if(btn){btn.style.display=selected.length>0?'inline-flex':'none';}
+  if(cnt)cnt.textContent=selected.length;
+  if(allCb)allCb.indeterminate=selected.length>0&&selected.length<all.length;
+  if(allCb&&selected.length===all.length&&all.length>0)allCb.checked=true;
+  if(allCb&&selected.length===0)allCb.checked=false;
+}
+function deleteSelected(){
+  const selected=[...document.querySelectorAll('.prospect-cb:checked')].map(cb=>Number(cb.dataset.id));
+  if(!selected.length)return;
+  if(!confirm('Supprimer '+selected.length+' prospect(s) ?'))return;
+  ST.prospects=ST.prospects.filter(p=>!selected.includes(p.id));
+  save();
+  renderProspects();renderReminders();renderTracking();
+  toast('🗑 '+selected.length+' prospect(s) supprimé(s)','success');
+}
+
 function resetFilters(){
   document.getElementById('f-search').value='';
-  document.getElementById('f-status').value='';
-  document.getElementById('f-entreprise').value='';
+  document.querySelectorAll('.fs-cb,.fe-cb').forEach(cb=>cb.checked=false);
+  updateFilterLabel('lbl-status',[],'Tous les statuts',{});
+  updateFilterLabel('lbl-entreprise',[],'Toutes les entreprises');
   applyFilters();
+  updateSelection();
   toast('Filtres effacés','success');
 }
 
@@ -1448,7 +1852,7 @@ async function showCalSlotsInModal(id,step){
     });
   };
 
-  if(calId&&GAS_URL){
+  if(calId&&getGasUrl()){
     try{
       const d=await callGAS({action:'getAvailableSlots',calendarId:calId,daysAhead:14,slotDuration:20});
       renderSlots(d.slots);
@@ -1555,7 +1959,7 @@ function loadProspectIntoGenerator(id){
   // Remplir le formulaire manuel
   const tabs=document.querySelectorAll('.tab');
   tabs.forEach((t,i)=>t.classList.toggle('active',i===0));
-  ['tab-manual','tab-linkedin','tab-csv'].forEach(n=>{const d=document.getElementById(n);if(d)d.style.display=n==='tab-manual'?'block':'none';});
+  ['tab-manual','tab-linkedin','tab-csv','tab-exa'].forEach(n=>{const d=document.getElementById(n);if(d)d.style.display=n==='tab-manual'?'block':'none';});
   document.getElementById('m-pn').value=p.prenom||'';
   document.getElementById('m-nm').value=p.nom||'';
   document.getElementById('m-fn').value=p.fonction||'';
@@ -1589,10 +1993,52 @@ function closeModal(){document.getElementById('modal').classList.remove('open');
 
 // ===================== REMINDERS =====================
 function renderReminders(){
-  const c=document.getElementById('rem-list');const em=document.getElementById('rem-empty');c.innerHTML='';
   const today=new Date();today.setHours(0,0,0,0);
-  const list=ST.prospects.filter(p=>p.nextReminder&&(p.sentEmails?.length||0)<4&&!p.replied).sort((a,b)=>new Date(a.nextReminder)-new Date(b.nextReminder));
-  if(!list.length){em.style.display='block';return;}em.style.display='none';
+  const allList=ST.prospects.filter(p=>p.nextReminder&&(p.sentEmails?.length||0)<4&&!p.replied).sort((a,b)=>new Date(a.nextReminder)-new Date(b.nextReminder));
+
+  // Peupler dropdown entreprises
+  const ddRemEnt=document.getElementById('dd-rem-entreprise-list')||document.getElementById('dd-rem-entreprise');
+  if(ddRemEnt){
+    const companies=[...new Set(allList.map(p=>p.entreprise).filter(Boolean))].sort();
+    const checked=getChecked('fr-ent-cb');
+    ddRemEnt.innerHTML=companies.map(c=>`
+      <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="${esc(c)}" onchange="applyReminderFilters()" class="fr-ent-cb" style="accent-color:var(--accent);width:14px;height:14px;cursor:pointer"${checked.includes(c)?' checked':''}> ${esc(c)}</label>`).join('');
+  }
+  applyReminderFilters();
+}
+
+function applyReminderFilters(){
+  const c=document.getElementById('rem-list');
+  const em=document.getElementById('rem-empty');
+  c.innerHTML='';
+  const today=new Date();today.setHours(0,0,0,0);
+  const urgences=getChecked('fr-urg-cb');
+  const entreprises=getChecked('fr-ent-cb');
+  updateFilterLabel('lbl-urgence',urgences,'Toutes les urgences',{'urgent':'Urgent','upcoming':'Dans 2 jours','normal':'Planifié'});
+  updateFilterLabel('lbl-rem-entreprise',entreprises,'Toutes les entreprises');
+
+  const remSearch=(document.getElementById('rem-search')?.value||'').toLowerCase().trim();
+  let list=ST.prospects.filter(p=>p.nextReminder&&(p.sentEmails?.length||0)<4&&!p.replied).sort((a,b)=>new Date(a.nextReminder)-new Date(b.nextReminder));
+
+  list=list.filter(p=>{
+    const d=new Date(p.nextReminder);d.setHours(0,0,0,0);
+    const diff=Math.round((d-today)/86400000);
+    const cls=diff<=0?'urgent':diff<=2?'upcoming':'normal';
+    if(urgences.length&&!urgences.includes(cls))return false;
+    if(entreprises.length&&!entreprises.includes(p.entreprise||''))return false;
+    if(remSearch){
+      const hay=`${p.prenom} ${p.nom} ${p.email} ${p.entreprise} ${p.fonction}`.toLowerCase();
+      if(!hay.includes(remSearch))return false;
+    }
+    return true;
+  });
+
+  const remCount=document.getElementById('rem-count');
+  if(remCount) remCount.textContent=list.length+' rappel'+(list.length>1?'s':'');
+
+  if(!list.length){em.style.display='block';return;}
+  em.style.display='none';
+
   list.forEach(p=>{
     const d=new Date(p.nextReminder);d.setHours(0,0,0,0);
     const diff=Math.round((d-today)/86400000);
@@ -1603,12 +2049,24 @@ function renderReminders(){
     if(diff<=0){cls='urgent';label=diff===0?"Aujourd'hui !":Math.abs(diff)+'j de retard';bc='urgent';}
     else if(diff<=2){cls='upcoming';label='Dans '+diff+'j';bc='upcoming';}
     else{cls='normal';label='Dans '+diff+'j';bc='normal';}
-    c.innerHTML+=`<div class="ri ${cls}" onclick="openModal(${p.id})">
-      <div class="av ${ac}" style="width:34px;height:34px;font-size:11px">${ini}</div>
-      <div class="ri-info"><div class="ri-name">${p.prenom} ${p.nom}</div><div class="ri-detail">${p.entreprise||'—'} · ${p.fonction||'—'} · Email ${step}/4</div></div>
-      <div class="ri-badge ${bc}">${label}</div>
+    c.innerHTML+=`<div class="ri ${cls}" style="display:flex;align-items:center;gap:12px">
+      <input type="checkbox" class="reminder-cb" data-id="${p.id}" onclick="updateRemSelection(event)" style="accent-color:var(--accent);cursor:pointer;width:15px;height:15px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;cursor:pointer" onclick="openModal(${p.id})">
+        <div class="av ${ac}" style="width:34px;height:34px;font-size:11px">${ini}</div>
+        <div class="ri-info"><div class="ri-name">${p.prenom} ${p.nom}</div><div class="ri-detail">${p.entreprise||'—'} · ${p.fonction||'—'} · Email ${step}/4</div></div>
+        <div class="ri-badge ${bc}">${label}</div>
+      </div>
     </div>`;
   });
+}
+
+function resetReminderFilters(){
+  const s=document.getElementById('rem-search');if(s)s.value='';
+  document.querySelectorAll('.fr-urg-cb,.fr-ent-cb').forEach(cb=>cb.checked=false);
+  updateFilterLabel('lbl-urgence',[],'Toutes les urgences',{});
+  updateFilterLabel('lbl-rem-entreprise',[],'Toutes les entreprises');
+  applyReminderFilters();
+  toast('Filtres effacés','success');
 }
 
 // ===================== TRACKING / DASHBOARD =====================
@@ -1642,13 +2100,15 @@ function renderTracking(){
       <div class="pb" style="margin-top:6px"><div class="pf" style="width:${rate}%;background:${colors[i-1]}"></div></div>`;
   }
 
-  // Alimenter le select entreprises
-  const sel=document.getElementById('tf-entreprise');
-  if(sel){
-    const cur=sel.value;
+  // Alimenter le dropdown entreprises tracking
+  const ddTfEnt=document.getElementById('dd-tf-entreprise');
+  if(ddTfEnt){
     const companies=[...new Set(ST.prospects.map(p=>p.entreprise).filter(Boolean))].sort();
-    sel.innerHTML='<option value="">Toutes les entreprises</option>'+companies.map(c=>`<option value="${c}">${c}</option>`).join('');
-    if(cur)sel.value=cur;
+    const checked=getChecked('ft-ent-cb');
+    ddTfEnt.innerHTML=companies.map(c=>`
+      <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''">
+        <input type="checkbox" value="${esc(c)}" onchange="applyTrackingFilters()" class="ft-ent-cb"${checked.includes(c)?' checked':''}> ${esc(c)}
+      </label>`).join('');
   }
 
   // Tableau détail — rendu via filtres
@@ -1669,40 +2129,43 @@ function renderTrackingRows(prospects){
 
 function applyTrackingFilters(){
   const search=(document.getElementById('tf-search')?.value||'').toLowerCase();
-  const status=document.getElementById('tf-status')?.value||'';
-  const entreprise=document.getElementById('tf-entreprise')?.value||'';
+  const statuses=getChecked('ft-st-cb');
+  const entreprises=getChecked('ft-ent-cb');
+  updateFilterLabel('lbl-tf-status',statuses,'Tous les statuts',{'replied':'💬 A répondu','opened':'✅ A ouvert','sent':'📤 Email envoyé','none':'— Pas démarré'});
+  updateFilterLabel('lbl-tf-entreprise',entreprises,'Toutes les entreprises');
 
   let filtered=ST.prospects.filter(p=>{
-    // Recherche texte
     if(search){
       const hay=`${p.prenom} ${p.nom} ${p.entreprise} ${p.email}`.toLowerCase();
       if(!hay.includes(search))return false;
     }
-    // Filtre entreprise
-    if(entreprise&&p.entreprise!==entreprise)return false;
-    // Filtre statut
-    if(status==='replied'&&!p.replied)return false;
-    if(status==='opened'&&!(p.openedEmails?.length>0))return false;
-    if(status==='sent'&&!(p.sentEmails?.length>0))return false;
-    if(status==='none'&&(p.sentEmails?.length>0||p.replied))return false;
+    if(entreprises.length&&!entreprises.includes(p.entreprise||''))return false;
+    if(statuses.length){
+      const match=statuses.some(s=>
+        (s==='replied'&&p.replied)||
+        (s==='opened'&&p.openedEmails?.length>0)||
+        (s==='sent'&&p.sentEmails?.length>0)||
+        (s==='none'&&!p.sentEmails?.length&&!p.replied)
+      );
+      if(!match)return false;
+    }
     return true;
   });
 
   renderTrackingRows(filtered);
 
-  // Compteur
   const cnt=document.getElementById('tf-count');
   if(cnt)cnt.textContent=filtered.length+' / '+ST.prospects.length;
 
-  // Message vide
   const empty=document.getElementById('tf-empty');
   if(empty)empty.style.display=filtered.length===0?'block':'none';
 }
 
 function resetTrackingFilters(){
   const s=document.getElementById('tf-search');if(s)s.value='';
-  const st=document.getElementById('tf-status');if(st)st.value='';
-  const e=document.getElementById('tf-entreprise');if(e)e.value='';
+  document.querySelectorAll('.ft-st-cb,.ft-ent-cb').forEach(cb=>cb.checked=false);
+  updateFilterLabel('lbl-tf-status',[],'Tous les statuts',{});
+  updateFilterLabel('lbl-tf-entreprise',[],'Toutes les entreprises');
   applyTrackingFilters();
 }
 
@@ -1718,7 +2181,7 @@ async function claude(key,prompt,max=800){
   const d=await r.json();if(d.error)throw new Error(d.error.message);return d.content[0].text.trim();
 }
 async function callGAS(payload){
-  const url=GAS_URL;
+  const url=getGasUrl();
   if(!url)throw new Error('URL Apps Script non configurée');
   const r=await fetch(url,{method:'POST',body:JSON.stringify(payload)});
   const d=await r.json();if(!d.success)throw new Error(d.error||'Erreur Apps Script');return d;
@@ -1739,8 +2202,10 @@ function logout(){
   localStorage.removeItem('aodocs_key');
   localStorage.removeItem('aodocs_gas');
   localStorage.removeItem('aodocs_cal');
+  localStorage.removeItem('aodocs_exa');
+  localStorage.removeItem('aodocs_lusha');
   document.getElementById('apiKey').value='';
-  document.getElementById('gasUrl').value=GAS_URL;
+  document.getElementById('gasUrl').value=getGasUrl();
   document.getElementById('calId').value='';
   setStatus('apiStatus','','');
   setStatus('calStatus','','');
@@ -1753,15 +2218,344 @@ function showSetupModal(){
 }
 function saveSetup(){
   const k=document.getElementById('setup-api-key').value.trim();
+  const g=document.getElementById('setup-gas-url').value.trim();
   const err=document.getElementById('setup-error');
   if(!k.startsWith('sk-ant-')){err.textContent='Clé API invalide (doit commencer par sk-ant-)';err.style.display='block';return;}
+  if(!g.startsWith('https://script.google.com/')){err.textContent='URL Apps Script invalide (doit commencer par https://script.google.com/)';err.style.display='block';return;}
   const c=document.getElementById('setup-cal-id').value.trim();
   localStorage.setItem('aodocs_key',k);
+  localStorage.setItem('aodocs_gas',g);
+  const ex=document.getElementById('setup-exa-key').value.trim();
+  if(ex){localStorage.setItem('aodocs_exa',ex);document.getElementById('exaKey').value=ex;setStatus('exaStatus','✓ Clé Exa configurée','ok');}
+
   if(c){localStorage.setItem('aodocs_cal',c);document.getElementById('calId').value=c;setStatus('calStatus','✓ Calendar configuré','ok');}
   document.getElementById('apiKey').value=k;
+  document.getElementById('gasUrl').value=g;
   setStatus('apiStatus','✓ Clé configurée','ok');
+  setStatus('gasStatus','✓ URL configurée','ok');
   document.getElementById('setupModal').style.display='none';
   toast('Configuration sauvegardée !','success');
+  loadFromSheet();
+}
+
+
+
+
+function saveExaKey(){
+  const k=document.getElementById('exaKey').value.trim();
+  if(!k){toast('Clé API Exa requise','error');return;}
+  localStorage.setItem('aodocs_exa',k);
+  setStatus('exaStatus','✓ Clé Exa sauvegardée','ok');
+  toast('Clé Exa sauvegardée','success');
+}
+
+function getChecked(cls){
+  return [...document.querySelectorAll('.'+cls+':checked')].map(cb=>cb.value);
+}
+function updateFilterLabel(btnId, selected, defaultLabel, labelMap){
+  const btn=document.getElementById(btnId);
+  if(!btn)return;
+  if(!selected.length){btn.textContent=defaultLabel;btn.style.borderColor='var(--border)';btn.style.color='var(--text)';return;}
+  const names=labelMap?selected.map(v=>labelMap[v]||v):selected;
+  btn.textContent=names.length===1?names[0]:names.length+' sélectionnés';
+  btn.style.borderColor='var(--accent)';
+  btn.style.color='var(--accent)';
+}
+function toggleDropdown(id){
+  const dd=document.getElementById(id);
+  if(!dd)return;
+  const isOpen=dd.style.display!=='none';
+  // Fermer tous les dropdowns
+  document.querySelectorAll('#dd-status,#dd-entreprise,#dd-urgence,#dd-rem-entreprise,#dd-tf-status,#dd-tf-entreprise').forEach(d=>d.style.display='none');
+  if(!isOpen)dd.style.display='block';
+}
+// Fermer dropdowns si clic dehors
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#wrap-status')&&!e.target.closest('#wrap-entreprise')&&!e.target.closest('#wrap-urgence')&&!e.target.closest('#wrap-rem-entreprise')){
+    document.querySelectorAll('#dd-status,#dd-entreprise,#dd-urgence,#dd-rem-entreprise,#dd-tf-status,#dd-tf-entreprise').forEach(d=>d.style.display='none');
+  }
+});
+
+function getExaKey(){return localStorage.getItem('aodocs_exa')||'';}
+
+let exaData=[];
+
+async function searchExa(){
+  const exaKey=getExaKey();
+  if(!exaKey){toast('Configurez votre clé API Exa dans les paramètres (sidebar)','error');return;}
+  const claudeKey=getClaudeKey();
+  if(!claudeKey){toast('Clé API Claude requise pour analyser les résultats','error');return;}
+  const query=document.getElementById('exa-query').value.trim();
+  if(!query){toast('Décrivez vos prospects idéaux','error');return;}
+  const count=parseInt(document.getElementById('exa-count').value);
+
+  document.getElementById('exa-progress').style.display='block';
+  document.getElementById('exa-results').style.display='none';
+  setExaProgress(10,'Recherche Exa en cours...');
+
+  try {
+    const proxyUrl='https://corsproxy.io/?url='+encodeURIComponent('https://api.exa.ai/search');
+    const resp = await fetch(proxyUrl,{
+      method:'POST',
+      headers:{'x-api-key':exaKey,'Content-Type':'application/json'},
+      body:JSON.stringify({
+        query:query,
+        numResults:count,
+        category:'people',
+        contents:{text:{maxCharacters:800}}
+      })
+    });
+    if(!resp.ok){
+      const err=await resp.json().catch(function(){return {};});
+      throw new Error(err.message||('Erreur Exa HTTP '+resp.status));
+    }
+    const data=await resp.json();
+    const results=data.results||[];
+    if(!results.length) throw new Error('Aucun résultat trouvé');
+    setExaProgress(50,results.length+' profils trouvés — extraction...');
+
+    const raw=results.map(function(r,i){
+      return '---PROFIL '+(i+1)+'---'
+        +'\nTitre: '+(r.title||'')
+        +'\nURL: '+(r.url||'')
+        +'\nContenu: '+((r.text||'').substring(0,600));
+    }).join('\n\n');
+
+    const prompt='Tu es un assistant de prospection B2B.'
+      +' Voici '+results.length+' profils trouves sur le web.'
+      +' Extrais pour chaque profil les informations disponibles.'
+      +' Reponds UNIQUEMENT avec un tableau JSON valide sans backticks :'
+      +'\n[{"prenom":"","nom":"","fonction":"","entreprise":"","email":"","secteur":"","contexte":"","linkedin":""}]'
+      +'\n- linkedin : utilise l URL du profil si elle contient linkedin.com sinon laisse vide'
+      +'\n- contexte : 1 phrase sur la pertinence pour AODocs'
+      +'\n- Retourne exactement '+results.length+' objets'
+      +'\n\n'+raw;
+
+    const extracted=await claude(claudeKey, prompt, 2000);
+    setExaProgress(90,'Finalisation...');
+
+    let prospects=[];
+    try{
+      const clean=extracted.replace(/[`]{3}json|[`]{3}/g,'').trim();
+      prospects=JSON.parse(clean);
+    }catch(e){
+      throw new Error('Erreur parsing résultats');
+    }
+
+    setExaProgress(100,'Contacts extraits !');
+    exaData=prospects.filter(function(p){return p.prenom||p.nom||p.entreprise;});
+    renderExaResults(exaData);
+
+  } catch(err){
+    document.getElementById('exa-progress').style.display='none';
+    toast('Erreur Exa : '+err.message,'error');
+  }
+}
+function parseExaItems(items){
+  return items.map((item,i)=>{
+    const enr=item.enrichments||[];
+    const get=(desc)=>{
+      const e=enr.find(x=>x.description&&x.description.toLowerCase().includes(desc.toLowerCase()));
+      return e&&e.value?e.value:'';
+    };
+    // Essayer aussi les propriétés directes de l'item
+    const props=item.properties||{};
+    return {
+      prenom: get('first name')||props.firstName||props.first_name||'',
+      nom: get('last name')||props.lastName||props.last_name||'',
+      fonction: get('job title')||props.title||props.jobTitle||'',
+      entreprise: get('company')||props.company||props.organization||'',
+      email: get('email')||props.email||'',
+      secteur: '',
+      contexte: item.title||item.url||'',
+      sourceUrl: item.url||''
+    };
+  }).filter(p=>p.prenom||p.nom||p.entreprise);
+}
+
+function renderExaResults(prospects){
+  document.getElementById('exa-progress').style.display='none';
+  document.getElementById('exa-results').style.display='block';
+  document.getElementById('exa-result-count').textContent=prospects.length;
+  const tbody=document.getElementById('exa-tbody');
+  tbody.innerHTML=prospects.map((p,i)=>`
+    <tr id="exa-row-${i}" style="border-bottom:1px solid var(--border);${i%2===0?'background:var(--s2)':''}">
+      <td style="padding:5px 8px">${p.prenom||'—'}</td>
+      <td style="padding:5px 8px">${p.nom||'—'}</td>
+      <td style="padding:5px 8px;color:var(--tm)">${p.fonction||'—'}</td>
+      <td style="padding:5px 8px">${p.entreprise||'—'}</td>
+      <td style="padding:3px 6px">
+        <input type="email" value="${p.email||''}" placeholder="email@exemple.fr"
+          onchange="exaData[${i}].email=this.value"
+          style="width:100%;border:1px solid ${p.email?'transparent':'#e5e7eb'};border-radius:4px;padding:3px 6px;font-size:11px;color:var(--accent);background:${p.email?'transparent':'#fff'};outline:none;font-family:inherit"
+          onfocus="this.style.border='1px solid var(--accent)';this.style.background='#fff'"
+          onblur="this.style.border=this.value?'1px solid transparent':'1px solid #e5e7eb';this.style.background=this.value?'transparent':'#fff'">
+      </td>
+      <td style="padding:5px 8px">${p.linkedin?'<a href="'+p.linkedin+'" target="_blank" style="color:#0077b5;font-size:11px;text-decoration:none">🔗 Voir</a>':'—'}</td>
+      <td style="padding:5px 8px;text-align:center" id="lusha-cell-${i}">
+        <button onclick="enrichWithLusha(${i})" style="background:none;border:1px solid #e5e7eb;border-radius:4px;cursor:pointer;color:#6b7280;font-size:11px;padding:2px 6px" title="Enrichir avec Lusha">🔍 Lusha</button>
+      </td>
+      <td style="padding:5px 8px;text-align:center">
+        <button onclick="removeExaRow(${i})" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:14px;padding:0 4px" title="Supprimer">✕</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+
+function saveLushaKey(){
+  const k=document.getElementById('lushaKey').value.trim();
+  if(!k){toast('Clé API Lusha requise','error');return;}
+  localStorage.setItem('aodocs_lusha',k);
+  setStatus('lushaStatus','✓ Clé Lusha sauvegardée','ok');
+  toast('Clé Lusha sauvegardée','success');
+}
+function getLushaKey(){return localStorage.getItem('aodocs_lusha')||'';}
+
+async function enrichWithLusha(i){
+  const lushaKey=getLushaKey();
+  if(!lushaKey){toast('Configurez votre clé API Lusha dans les paramètres','error');return;}
+  const p=exaData[i];
+  if(!p){return;}
+
+  const cell=document.getElementById('lusha-cell-'+i);
+  cell.innerHTML='<span style="color:#6b7280;font-size:11px">⏳ ...</span>';
+
+  try {
+    // Priorité 1 : LinkedIn URL (le plus précis)
+    // Priorité 2 : prénom + nom + entreprise (obligatoire)
+    // Priorité 3 : prénom + nom + domaine extrait de l'email
+    let params=new URLSearchParams();
+
+    if(p.linkedin && p.linkedin.includes('linkedin.com/in/')){
+      params.append('linkedinUrl', p.linkedin);
+    } else if(p.prenom && p.nom && p.entreprise){
+      params.append('firstName', p.prenom);
+      params.append('lastName', p.nom);
+      params.append('companyName', p.entreprise);
+    } else if(p.prenom && p.nom && p.email && p.email.includes('@')){
+      params.append('firstName', p.prenom);
+      params.append('lastName', p.nom);
+      params.append('companyDomain', p.email.split('@')[1]);
+    } else if(p.prenom && p.nom){
+      // Dernier recours : juste le nom, moins fiable
+      params.append('firstName', p.prenom);
+      params.append('lastName', p.nom);
+      params.append('companyName', p.entreprise||p.secteur||'');
+    } else {
+      throw new Error('Informations insuffisantes (prénom, nom ou LinkedIn requis)');
+    }
+
+    const apiUrl='https://api.lusha.com/v2/person?'+params.toString();
+    const proxyUrl='https://corsproxy.io/?url='+encodeURIComponent(apiUrl);
+
+    const resp=await fetch(proxyUrl,{
+      method:'GET',
+      headers:{'api_key':lushaKey,'Content-Type':'application/json'}
+    });
+
+    if(!resp.ok){
+      const err=await resp.json().catch(function(){return {};});
+      throw new Error(err.message||('Lusha HTTP '+resp.status));
+    }
+
+    const data=await resp.json();
+    const emails=(data.data&&data.data.emailAddresses)||[];
+    // Prioriser les emails pro (type "professional" ou "business")
+    const proEmail=emails.find(function(e){return e.type==='professional'||e.type==='business';});
+    const email=(proEmail||emails[0]||{}).email||'';
+
+    if(email){
+      exaData[i].email=email;
+      cell.innerHTML='<span style="color:#059669;font-size:11px">✓ OK</span>';
+      // Mettre à jour le champ input email dans la ligne
+      const row=document.getElementById('exa-row-'+i);
+      if(row){
+        const emailInput=row.querySelectorAll('td')[4].querySelector('input');
+        if(emailInput){emailInput.value=email;emailInput.style.border='1px solid transparent';emailInput.style.background='transparent';}
+      }
+      toast('Email trouvé : '+email,'success');
+    } else {
+      cell.innerHTML='<span style="color:#dc2626;font-size:11px">Non trouvé</span>';
+      toast('Aucun email trouvé pour '+p.prenom+' '+p.nom,'info');
+    }
+  } catch(err){
+    cell.innerHTML='<button onclick="enrichWithLusha('+i+')" style="background:none;border:1px solid #e5e7eb;border-radius:4px;cursor:pointer;color:#6b7280;font-size:11px;padding:2px 6px">🔍 Lusha</button>';
+    toast('Erreur Lusha : '+err.message,'error');
+  }
+}
+
+async function enrichAllWithLusha(){
+  const lushaKey=getLushaKey();
+  if(!lushaKey){toast('Configurez votre clé API Lusha dans les paramètres','error');return;}
+
+  const btn=document.getElementById('enrich-all-btn');
+  const status=document.getElementById('lusha-queue-status');
+  btn.disabled=true;
+  status.style.display='block';
+
+  const toEnrich=exaData.map(function(p,i){return i;}).filter(function(i){return !exaData[i].email;});
+
+  if(!toEnrich.length){toast('Tous les contacts ont déjà un email','info');btn.disabled=false;return;}
+
+  for(let j=0;j<toEnrich.length;j++){
+    const i=toEnrich[j];
+    const p=exaData[i];
+    status.textContent='Enrichissement '+p.prenom+' '+p.nom+' ('+( j+1)+'/'+toEnrich.length+')... patientez';
+    await enrichWithLusha(i);
+    if(j<toEnrich.length-1){
+      // Attendre 13s entre chaque appel pour respecter la limite 5/min
+      for(let s=13;s>0;s--){
+        status.textContent='Prochain enrichissement dans '+s+'s... ('+( j+1)+'/'+toEnrich.length+' traités)';
+        await new Promise(function(r){setTimeout(r,1000);});
+      }
+    }
+  }
+
+  status.textContent='✅ Enrichissement terminé !';
+  btn.disabled=false;
+  setTimeout(function(){status.style.display='none';},3000);
+}
+
+function removeExaRow(i){
+  exaData.splice(i,1);
+  renderExaResults(exaData);
+}
+
+function importExaProspects(){
+  if(!exaData.length){toast('Aucun contact à importer','error');return;}
+  let imported=0;
+  exaData.forEach(p=>{
+    const prospect={
+      id:Date.now()+Math.random(),
+      prenom:p.prenom,nom:p.nom,fonction:p.fonction,
+      entreprise:p.entreprise,email:p.email,
+      secteur:p.secteur,contexte:p.contexte,linkedin:p.linkedin||'',
+      createdAt:new Date().toISOString(),
+      sentEmails:[],replied:false
+    };
+    if(!ST.prospects.find(x=>x.email&&x.email===prospect.email&&prospect.email)){
+      ST.prospects.unshift(prospect);
+      imported++;
+    }
+  });
+  save();
+  toast(`✅ ${imported} contact(s) importé(s) depuis Exa !`,'success');
+  resetExa();
+  go('pg-prospects');
+}
+
+function resetExa(){
+  exaData=[];
+  document.getElementById('exa-query').value='';
+  document.getElementById('exa-progress').style.display='none';
+  document.getElementById('exa-results').style.display='none';
+}
+
+function setExaProgress(pct,msg){
+  document.getElementById('exa-bar').style.width=pct+'%';
+  document.getElementById('exa-bar-label').textContent=pct+'%';
+  document.getElementById('exa-status-msg').textContent=msg;
 }
 
 </script>
@@ -1778,6 +2572,17 @@ function saveSetup(){
       <div class="setup-label">Clé API Claude</div>
       <input class="setup-input" id="setup-api-key" type="password" placeholder="sk-ant-api03-...">
       <div class="setup-hint">Obtenez votre clé sur console.anthropic.com → API Keys</div>
+    </div>
+
+    <div class="setup-field">
+      <div class="setup-label">Clé API Exa <span style="font-weight:400;font-size:10px;color:#9ca3af">(optionnel)</span></div>
+      <input class="setup-input" id="setup-exa-key" placeholder="exa-...">
+      <div class="setup-hint">Obtenez votre clé gratuite sur dashboard.exa.ai → API Keys</div>
+    </div>
+    <div class="setup-field">
+      <div class="setup-label">URL Apps Script</div>
+      <input class="setup-input" id="setup-gas-url" placeholder="https://script.google.com/macros/s/...">
+      <div class="setup-hint">L'URL de déploiement de votre Google Apps Script personnel</div>
     </div>
 
     <div class="setup-field">
