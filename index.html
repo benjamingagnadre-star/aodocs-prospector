@@ -254,9 +254,15 @@
   .filter-count{font-size:12px;font-weight:600;color:var(--tm);white-space:nowrap;padding:6px 12px;background:var(--s2);border-radius:20px;}
   .filter-reset{background:none;border:none;color:var(--tl);font-size:12px;cursor:pointer;padding:6px 8px;border-radius:5px;font-family:'Inter',sans-serif;font-weight:500;transition:all .12s;}
   .filter-reset:hover{background:var(--err-bg);color:var(--err);}
+
+  /* DROPDOWN CHECKBOX ITEMS — style unifié */
+  .dd-item{display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;color:var(--text);white-space:nowrap;}
+  .dd-item:hover{background:var(--s2);}
+  .dd-item input[type="checkbox"]{accent-color:var(--accent);width:14px;height:14px;cursor:pointer;flex-shrink:0;margin:0;}
+
   .fs-cb{accent-color:var(--accent);width:14px;height:14px;cursor:pointer;}
   .fe-cb{accent-color:var(--accent);width:14px;height:14px;cursor:pointer;}
-  .sort-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:6px;border:1.5px solid var(--border);background:var(--white);color:var(--tm);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s;white-space:nowrap;}
+  .sort-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:6px;border:1.5px solid var(--border);background:var(--white);color:var(--tm);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .12px;white-space:nowrap;}
   .sort-btn:hover,.sort-btn.active{border-color:var(--accent);color:var(--accent);background:var(--al);}
 
   /* SETUP MODAL */
@@ -623,11 +629,11 @@
       <div style="position:relative" id="wrap-status">
         <button onclick="toggleDropdown('dd-status')" id="btn-status" style="background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:8px 30px 8px 11px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 9px center;min-width:130px;text-align:left" id="lbl-status">Tous les statuts</button>
         <div id="dd-status" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1.5px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:200;min-width:180px;padding:6px 0">
-          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="new" onchange="applyFilters()" class="fs-cb"> Nouveau</label>
-          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="sent" onchange="applyFilters()" class="fs-cb"> En cours</label>
-          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="opened" onchange="applyFilters()" class="fs-cb"> Ouvert</label>
-          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="pending" onchange="applyFilters()" class="fs-cb"> À relancer</label>
-          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="replied" onchange="applyFilters()" class="fs-cb"> A répondu</label>
+          <label class="dd-item"><input type="checkbox" value="new" onchange="applyFilters()" class="fs-cb"> Nouveau</label>
+          <label class="dd-item"><input type="checkbox" value="sent" onchange="applyFilters()" class="fs-cb"> En cours</label>
+          <label class="dd-item"><input type="checkbox" value="opened" onchange="applyFilters()" class="fs-cb"> Ouvert</label>
+          <label class="dd-item"><input type="checkbox" value="pending" onchange="applyFilters()" class="fs-cb"> À relancer</label>
+          <label class="dd-item"><input type="checkbox" value="replied" onchange="applyFilters()" class="fs-cb"> A répondu</label>
         </div>
       </div>
       <div style="position:relative" id="wrap-entreprise">
@@ -665,9 +671,9 @@
       <div style="position:relative" id="wrap-urgence">
         <button onclick="toggleDropdown('dd-urgence')" id="lbl-urgence" style="background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:8px 30px 8px 11px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 9px center;min-width:150px;text-align:left">Toutes les urgences</button>
         <div id="dd-urgence" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1.5px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:200;min-width:180px;padding:6px 0">
-          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="urgent" onchange="applyReminderFilters()" class="fr-urg-cb" style="accent-color:var(--accent);width:14px;height:14px;cursor:pointer"> Urgent / En retard</label>
-          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="upcoming" onchange="applyReminderFilters()" class="fr-urg-cb" style="accent-color:var(--accent);width:14px;height:14px;cursor:pointer"> Dans 2 jours</label>
-          <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="normal" onchange="applyReminderFilters()" class="fr-urg-cb" style="accent-color:var(--accent);width:14px;height:14px;cursor:pointer"> Planifié</label>
+          <label class="dd-item"><input type="checkbox" value="urgent" onchange="applyReminderFilters()" class="fr-urg-cb"> Urgent / En retard</label>
+          <label class="dd-item"><input type="checkbox" value="upcoming" onchange="applyReminderFilters()" class="fr-urg-cb"> Dans 2 jours</label>
+          <label class="dd-item"><input type="checkbox" value="normal" onchange="applyReminderFilters()" class="fr-urg-cb"> Planifié</label>
         </div>
       </div>
       <div style="position:relative" id="wrap-rem-entreprise">
@@ -763,10 +769,10 @@
           <div style="position:relative" id="wrap-tf-status">
             <button onclick="toggleDropdown('dd-tf-status')" id="lbl-tf-status" style="background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:6px 26px 6px 10px;color:var(--text);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 8px center;min-width:130px;text-align:left">Tous les statuts</button>
             <div id="dd-tf-status" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1.5px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:200;min-width:180px;padding:6px 0">
-              <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="replied" onchange="applyTrackingFilters()" class="ft-st-cb"><span style="display:inline-flex;align-items:center;gap:5px;line-height:1.2"><span>💬</span><span>A répondu</span></span></label>
-              <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="opened" onchange="applyTrackingFilters()" class="ft-st-cb"><span style="display:inline-flex;align-items:center;gap:5px;line-height:1.2"><span>✅</span><span>A ouvert</span></span></label>
-              <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="sent" onchange="applyTrackingFilters()" class="ft-st-cb"><span style="display:inline-flex;align-items:center;gap:5px;line-height:1.2"><span>📤</span><span>Email envoyé</span></span></label>
-              <label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="none" onchange="applyTrackingFilters()" class="ft-st-cb"><span style="display:inline-flex;align-items:center;gap:5px;line-height:1.2"><span>—</span><span>Pas démarré</span></span></label>
+              <label class="dd-item"><input type="checkbox" value="replied" onchange="applyTrackingFilters()" class="ft-st-cb"> 💬 A répondu</label>
+              <label class="dd-item"><input type="checkbox" value="opened" onchange="applyTrackingFilters()" class="ft-st-cb"> ✅ A ouvert</label>
+              <label class="dd-item"><input type="checkbox" value="sent" onchange="applyTrackingFilters()" class="ft-st-cb"> 📤 Email envoyé</label>
+              <label class="dd-item"><input type="checkbox" value="none" onchange="applyTrackingFilters()" class="ft-st-cb"> — Pas démarré</label>
             </div>
           </div>
           <div style="position:relative" id="wrap-tf-entreprise">
@@ -865,8 +871,6 @@
     </div>
     <div class="setup-title">Bienvenue sur AODocs Prospector</div>
     <div class="setup-sub">Connectez-vous et renseignez vos clés API pour démarrer.</div>
-
-    <!-- Google -->
     <div class="setup-block setup-block-google">
       <div class="setup-block-title setup-block-title-blue">Connectez-vous avec Google</div>
       <div style="font-size:11px;color:#4b6cb7;margin-bottom:10px">Permet l'envoi depuis Gmail, la sauvegarde Sheets et la lecture Calendar.</div>
@@ -876,28 +880,21 @@
       </div>
       <div id="setup-google-ok" style="display:none;color:#059669;font-size:12px;font-weight:600;margin-top:4px">✓ Connecté avec Google</div>
     </div>
-
-    <!-- Claude -->
     <div class="setup-block">
       <div class="setup-block-title">Clé API Claude <span style="font-weight:400;color:#dc2626;font-size:10px">requise</span></div>
       <input class="setup-input" id="setup-api-key" type="password" placeholder="sk-ant-api03-...">
       <div class="setup-block-hint">console.anthropic.com → API Keys</div>
     </div>
-
-    <!-- Exa -->
     <div class="setup-block">
       <div class="setup-block-title">Clé API Exa <span class="setup-optional">optionnel</span></div>
       <input class="setup-input" id="setup-exa-key" placeholder="exa-...">
       <div class="setup-block-hint">dashboard.exa.ai → API Keys — pour la recherche de prospects</div>
     </div>
-
-    <!-- Lusha — NOUVEAU -->
     <div class="setup-block">
       <div class="setup-block-title">Clé API Lusha <span class="setup-optional">optionnel</span></div>
       <input class="setup-input" id="setup-lusha-key" placeholder="lusha-...">
       <div class="setup-block-hint">app.lusha.com → Settings → API — pour enrichir les emails pro</div>
     </div>
-
     <div class="setup-error" id="setup-error"></div>
     <button class="setup-btn" onclick="saveSetup()">Démarrer →</button>
   </div>
@@ -997,10 +994,8 @@ function saveSetup(){
   localStorage.setItem('aodocs_key',k);
   document.getElementById('apiKey').value=k;
   setStatus('apiStatus','✓ Clé configurée','ok');
-  // Exa
   const ex=document.getElementById('setup-exa-key').value.trim();
   if(ex){localStorage.setItem('aodocs_exa',ex);document.getElementById('exaKey').value=ex;setStatus('exaStatus','✓ Clé Exa configurée','ok');}
-  // Lusha — NOUVEAU
   const lu=document.getElementById('setup-lusha-key').value.trim();
   if(lu){localStorage.setItem('aodocs_lusha',lu);document.getElementById('lushaKey').value=lu;setStatus('lushaStatus','✓ Clé Lusha configurée','ok');}
   document.getElementById('setupModal').style.display='none';
@@ -1114,7 +1109,6 @@ async function extractLN(){
     const r=await claude(key,`Extrait les infos de ce profil LinkedIn. Réponds UNIQUEMENT avec ce JSON sans backticks:\n{"prenom":"","nom":"","fonction":"","entreprise":"","secteur":"","email":"","contexte":""}\nContexte = résumé 2 phrases pour prospection.\n\n${text}`,500);
     const j=JSON.parse(r);ST.prospect=j;
     document.getElementById('exf').style.display='block';
-    // Vérification doublon LinkedIn
     const dupLN=findDuplicate(j.prenom,j.nom,j.email,j.entreprise);
     showDuplicateWarning('exf',dupLN);
     document.getElementById('exform').innerHTML=`<div class="fg2">
@@ -1232,7 +1226,6 @@ function insertSlotsInEmail(){
 }
 
 // ===================== SAVE PROSPECT =====================
-// Vérification doublon en temps réel sur le formulaire manuel
 function checkManualDuplicate(){
   const prenom=v('m-pn'),nom=v('m-nm'),email=v('m-em'),entreprise=v('m-en');
   if(!prenom&&!nom&&!email)return;
@@ -1328,7 +1321,10 @@ function applyRepliesFilter(){
 function renderProspects(){
   const companies=[...new Set(ST.prospects.map(p=>p.entreprise).filter(Boolean))].sort();
   const ddEnt=document.getElementById('dd-entreprise');
-  if(ddEnt){const checked=getChecked('fe-cb');ddEnt.innerHTML=companies.map(c=>`<label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="${esc(c)}" onchange="applyFilters()" class="fe-cb"${checked.includes(c)?' checked':''}><span>${esc(c)}</span></label>`).join('');}
+  if(ddEnt){
+    const checked=getChecked('fe-cb');
+    ddEnt.innerHTML=companies.map(c=>`<label class="dd-item"><input type="checkbox" value="${esc(c)}" onchange="applyFilters()" class="fe-cb"${checked.includes(c)?' checked':''}> ${esc(c)}</label>`).join('');
+  }
   applyFilters();
 }
 
@@ -1394,11 +1390,97 @@ function openModal(id){
     if(em&&!sent)acts+=`<button class="btn btn-gmail btn-xs" onclick="sendViaGmail(${id},${i})">📧 Envoyer via Gmail</button>`;
     if(em&&!sent)acts+=`<button class="btn btn-ok btn-xs" onclick="markSent(${id},${i})">✓ Marquer envoyé</button>`;
     if(sent&&!opened)acts+=`<button class="btn btn-s btn-xs" onclick="markOpened(${id},${i})">👁 Marquer ouvert</button>`;
+    if(em&&!sent)acts+=`<button class="btn btn-cal btn-xs" onclick="showCalSlotsInModal(${id},${i})"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Créneaux</button>`;
     if(em)acts+=`<button class="btn btn-g btn-xs" onclick="copyModal(${id},${i})">Copier</button>`;
     if(em)acts+=`<button class="btn btn-s btn-xs" onclick="saveEmailEdit(${id},${i})" style="margin-left:auto">💾 Sauvegarder</button>`;
-    html+=`<div style="border:1px solid var(--border);border-radius:var(--rs);margin-bottom:8px;overflow:hidden"><div style="padding:8px 12px;background:var(--s2);display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--bl)"><span>${si[i-1]}</span><span style="font-size:12px;font-weight:600">Email ${i} — ${sl[i-1]}</span>${sb}</div>${em?`<div style="padding:8px 12px;font-size:11.5px"><div style="color:var(--tm);margin-bottom:4px;font-weight:600;font-size:10.5px">OBJET</div><input id="edit-subj-${id}-${i}" value="${esc(em.subject)}" style="width:100%;font-size:12.5px;margin-bottom:8px;padding:6px 9px;border:1.5px solid var(--border);border-radius:5px;font-family:Inter,sans-serif"><div style="color:var(--tm);margin-bottom:4px;font-weight:600;font-size:10.5px">CORPS</div><textarea id="edit-body-${id}-${i}" style="width:100%;font-size:12px;line-height:1.7;min-height:120px;padding:8px;border:1.5px solid var(--border);border-radius:5px;font-family:Inter,sans-serif;resize:vertical">${esc(em.body)}</textarea></div>`:`<div style="padding:10px 12px;font-size:12px;color:var(--tm)">Email non généré</div>`}${acts?`<div style="padding:6px 12px;border-top:1px solid var(--bl);display:flex;gap:5px;flex-wrap:wrap;align-items:center">${acts}</div>`:''}</div>`;
+    html+=`<div style="border:1px solid var(--border);border-radius:var(--rs);margin-bottom:8px;overflow:hidden">
+      <div style="padding:8px 12px;background:var(--s2);display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--bl)"><span>${si[i-1]}</span><span style="font-size:12px;font-weight:600">Email ${i} — ${sl[i-1]}</span>${sb}</div>
+      ${em
+        ?`<div style="padding:8px 12px;font-size:11.5px">
+            <div style="color:var(--tm);margin-bottom:4px;font-weight:600;font-size:10.5px">OBJET</div>
+            <input id="edit-subj-${id}-${i}" value="${esc(em.subject)}" style="width:100%;font-size:12.5px;margin-bottom:8px;padding:6px 9px;border:1.5px solid var(--border);border-radius:5px;font-family:Inter,sans-serif">
+            <div style="color:var(--tm);margin-bottom:4px;font-weight:600;font-size:10.5px">CORPS</div>
+            <textarea id="edit-body-${id}-${i}" style="width:100%;font-size:12px;line-height:1.7;min-height:120px;padding:8px;border:1.5px solid var(--border);border-radius:5px;font-family:Inter,sans-serif;resize:vertical">${esc(em.body)}</textarea>
+            <div id="cal-slots-modal-${id}-${i}" style="display:none;margin-top:10px;padding:12px;background:#f8fbff;border:1.5px solid #bfdbfe;border-radius:var(--rs)">
+              <div style="font-size:11px;font-weight:700;color:#1e40af;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+                <span>📅 Sélectionnez les créneaux à insérer</span>
+                <button onclick="document.getElementById('cal-slots-modal-${id}-${i}').style.display='none'" style="background:none;border:none;cursor:pointer;color:var(--tm);font-size:14px;line-height:1">✕</button>
+              </div>
+              <div class="slots-grid" id="modal-slots-grid-${id}-${i}"></div>
+              <div style="margin-top:10px;display:flex;gap:6px;align-items:center">
+                <button class="btn btn-cal btn-sm" onclick="insertSlotsInModalEmail(${id},${i})">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Insérer les créneaux
+                </button>
+                <span style="font-size:10.5px;color:var(--tm)" id="modal-slots-count-${id}-${i}">0 sélectionné(s)</span>
+              </div>
+            </div>
+           </div>`
+        :`<div style="padding:10px 12px;font-size:12px;color:var(--tm)">Email non généré</div>`
+      }
+      ${acts?`<div style="padding:6px 12px;border-top:1px solid var(--bl);display:flex;gap:5px;flex-wrap:wrap;align-items:center">${acts}</div>`:''}
+    </div>`;
   }
   document.getElementById('modal-body').innerHTML=html;document.getElementById('modal').classList.add('open');
+}
+
+// ===================== CALENDAR SLOTS IN MODAL =====================
+let modalSelectedSlots={};
+
+async function showCalSlotsInModal(id,step){
+  const sectionId=`cal-slots-modal-${id}-${step}`;
+  const gridId=`modal-slots-grid-${id}-${step}`;
+  const section=document.getElementById(sectionId);
+  const grid=document.getElementById(gridId);
+  if(!section||!grid)return;
+  if(section.style.display!=='none'){section.style.display='none';return;}
+  section.style.display='block';
+  grid.innerHTML='<div style="font-size:11.5px;color:var(--tm);padding:6px 0">⏳ Chargement des créneaux...</div>';
+  const key=`${id}-${step}`;
+  modalSelectedSlots[key]=[];
+
+  const renderSlots=(slots)=>{
+    grid.innerHTML='';
+    if(!slots||!slots.length){grid.innerHTML='<div style="font-size:11.5px;color:var(--tm)">Aucun créneau disponible.</div>';return;}
+    slots.slice(0,9).forEach(slot=>{
+      const el=document.createElement('div');el.className='slot';
+      el.innerHTML=`<div class="slot-time">${slot.time}</div><div class="slot-date">${slot.date}</div>`;
+      el.onclick=()=>{
+        el.classList.toggle('selected');
+        if(el.classList.contains('selected'))modalSelectedSlots[key].push(slot);
+        else modalSelectedSlots[key]=modalSelectedSlots[key].filter(s=>s.time!==slot.time||s.date!==slot.date);
+        document.getElementById(`modal-slots-count-${id}-${step}`).textContent=`${modalSelectedSlots[key].length} sélectionné(s)`;
+      };
+      grid.appendChild(el);
+    });
+  };
+
+  try{
+    const slots=await calendarGetSlots();
+    renderSlots(slots);
+  }catch(e){
+    const slots=[];const today=new Date();const days=['Lun','Mar','Mer','Jeu','Ven'];const times=['10h00','11h00','14h00','15h00','16h00'];
+    let count=0;
+    for(let dd=1;dd<=14&&count<9;dd++){
+      const date=new Date(today);date.setDate(today.getDate()+dd);
+      if(date.getDay()===0||date.getDay()===6)continue;
+      const dayName=days[date.getDay()-1];const dateStr=`${dayName} ${date.getDate()}/${date.getMonth()+1}`;const time=times[count%times.length];
+      slots.push({date:dateStr,time,full:`${dayName} ${date.getDate()}/${date.getMonth()+1} à ${time}`});count++;
+    }
+    renderSlots(slots);
+    toast('Créneaux générés en mode local','info');
+  }
+}
+
+function insertSlotsInModalEmail(id,step){
+  const key=`${id}-${step}`;const slots=modalSelectedSlots[key]||[];
+  if(!slots.length){toast('Sélectionnez au moins un créneau','error');return;}
+  const textarea=document.getElementById(`edit-body-${id}-${step}`);if(!textarea)return;
+  insertSlotsInText(textarea, slots);
+  document.getElementById(`cal-slots-modal-${id}-${step}`).style.display='none';
+  modalSelectedSlots[key]=[];
+  toast('Créneaux insérés ✓ — pensez à sauvegarder','success');
+  textarea.scrollIntoView({behavior:'smooth',block:'nearest'});textarea.focus();
 }
 
 function saveEmailEdit(id,step){const p=ST.prospects.find(x=>x.id===id);if(!p)return;const subj=document.getElementById(`edit-subj-${id}-${step}`)?.value.trim();const body=document.getElementById(`edit-body-${id}-${step}`)?.value.trim();if(!subj||!body){toast('Objet et corps ne peuvent pas être vides','error');return;}if(!p.emails)p.emails={};p.emails[step]={subject:subj,body:body};save();toast(`Email ${step} modifié et sauvegardé ✓`,'success');}
@@ -1413,7 +1495,11 @@ function renderReminders(){
   const today=new Date();today.setHours(0,0,0,0);
   const allList=ST.prospects.filter(p=>p.nextReminder&&(p.sentEmails?.length||0)<4&&!p.replied).sort((a,b)=>new Date(a.nextReminder)-new Date(b.nextReminder));
   const ddRemEnt=document.getElementById('dd-rem-entreprise');
-  if(ddRemEnt){const companies=[...new Set(allList.map(p=>p.entreprise).filter(Boolean))].sort();const checked=getChecked('fr-ent-cb');ddRemEnt.innerHTML=companies.map(c=>`<label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="${esc(c)}" onchange="applyReminderFilters()" class="fr-ent-cb" style="accent-color:var(--accent);width:14px;height:14px;cursor:pointer"${checked.includes(c)?' checked':''}><span>${esc(c)}</span></label>`).join('');}
+  if(ddRemEnt){
+    const companies=[...new Set(allList.map(p=>p.entreprise).filter(Boolean))].sort();
+    const checked=getChecked('fr-ent-cb');
+    ddRemEnt.innerHTML=companies.map(c=>`<label class="dd-item"><input type="checkbox" value="${esc(c)}" onchange="applyReminderFilters()" class="fr-ent-cb"${checked.includes(c)?' checked':''}> ${esc(c)}</label>`).join('');
+  }
   applyReminderFilters();
 }
 
@@ -1460,8 +1546,14 @@ function renderTracking(){
   document.getElementById('open-rate').textContent=or+'%';document.getElementById('open-bar').style.width=or+'%';
   document.getElementById('reply-rate').textContent=rr+'%';document.getElementById('reply-bar').style.width=rr+'%';
   for(let i=1;i<=4;i++){const stepSent=ST.prospects.filter(p=>p.sentEmails?.includes(i)).length;const stepOpen=ST.prospects.filter(p=>p.openedEmails?.includes(i)).length;const rate=stepSent?Math.round(stepOpen/stepSent*100):0;const labels=['Contact','Relance','Valeur','Final'];const colors=['#1a6ff0','#059669','#7c3aed','#d97706'];document.getElementById('perf-'+i).innerHTML=`<div style="font-size:10px;font-weight:700;color:var(--tm);margin-bottom:6px">${labels[i-1]}</div><div style="font-size:20px;font-weight:800;color:${colors[i-1]}">${rate}%</div><div style="font-size:10px;color:var(--tm);margin-top:2px">${stepOpen}/${stepSent} ouverts</div><div class="pb" style="margin-top:6px"><div class="pf" style="width:${rate}%;background:${colors[i-1]}"></div></div>`;}
+
+  // Dropdown entreprises Tableau de bord — style unifié
   const ddTfEnt=document.getElementById('dd-tf-entreprise');
-  if(ddTfEnt){const companies=[...new Set(ST.prospects.map(p=>p.entreprise).filter(Boolean))].sort();const checked=getChecked('ft-ent-cb');ddTfEnt.innerHTML=companies.map(c=>`<label style="display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''"><input type="checkbox" value="${esc(c)}" onchange="applyTrackingFilters()" class="ft-ent-cb"${checked.includes(c)?' checked':''}><span>${esc(c)}</span></label>`).join('');}
+  if(ddTfEnt){
+    const companies=[...new Set(ST.prospects.map(p=>p.entreprise).filter(Boolean))].sort();
+    const checked=getChecked('ft-ent-cb');
+    ddTfEnt.innerHTML=companies.map(c=>`<label class="dd-item"><input type="checkbox" value="${esc(c)}" onchange="applyTrackingFilters()" class="ft-ent-cb"${checked.includes(c)?' checked':''}> ${esc(c)}</label>`).join('');
+  }
   applyTrackingFilters();
 }
 
@@ -1544,9 +1636,8 @@ async function searchExa(){
     const extracted=await claude(claudeKey,prompt,2000);setExaProgress(90,'Finalisation...');
     let prospects=[];try{const clean=extracted.replace(/[`]{3}json|[`]{3}/g,'').trim();prospects=JSON.parse(clean);}catch(e){throw new Error('Erreur parsing résultats');}
     setExaProgress(100,'Contacts extraits !');exaData=prospects.filter(function(p){return p.prenom||p.nom||p.entreprise;});
-  // Marquer les doublons dans les résultats Exa
-  exaData=exaData.map(p=>({...p,_isDuplicate:!!findDuplicate(p.prenom,p.nom,p.email,p.entreprise)}));
-  renderExaResults(exaData);
+    exaData=exaData.map(p=>({...p,_isDuplicate:!!findDuplicate(p.prenom,p.nom,p.email,p.entreprise)}));
+    renderExaResults(exaData);
   }catch(err){document.getElementById('exa-progress').style.display='none';toast('Erreur Exa : '+err.message,'error');}
 }
 
@@ -1611,7 +1702,6 @@ async function fetchWithProxy(url, options={}, attempt=0){
   const proxyUrl=CORS_PROXIES[attempt](url);
   try{
     const resp=await fetch(proxyUrl, options);
-    // allorigins renvoie parfois 200 avec une erreur dans le body
     if(!resp.ok) throw new Error('HTTP '+resp.status);
     return resp;
   }catch(e){
@@ -1676,19 +1766,16 @@ async function fetchGoogleUserInfo(){
 }
 
 // ===================== TOKEN MANAGEMENT =====================
-let tokenExpiresAt=0; // timestamp ms
+let tokenExpiresAt=0;
 
 async function ensureGoogleToken(forceRefresh=false){
   const now=Date.now();
-  // Token encore valide (marge 2 min)
   if(!forceRefresh && googleAccessToken && now < tokenExpiresAt-120000) return true;
-  // Essayer le token sauvegardé si pas encore de token en mémoire
   if(!forceRefresh && !googleAccessToken){
     const saved=localStorage.getItem('google_access_token');
     const exp=parseInt(localStorage.getItem('google_token_expires')||'0');
     if(saved && now < exp-120000){googleAccessToken=saved;tokenExpiresAt=exp;return true;}
   }
-  // Sinon relancer l'auth silencieusement
   return new Promise(function(resolve){
     if(!googleTokenClient){
       setGoogleIndicator('expired');
@@ -1711,13 +1798,11 @@ async function ensureGoogleToken(forceRefresh=false){
   });
 }
 
-// Wrapper pour tous les appels Google — retry auto si 401
 async function gFetch(url, options={}, retry=true){
   const ok=await ensureGoogleToken();if(!ok)throw new Error('Non authentifié Google');
   options.headers={...options.headers, Authorization:'Bearer '+googleAccessToken};
   const r=await fetch(url,options);
   if(r.status===401 && retry){
-    // Token rejeté par Google — forcer le refresh et réessayer une fois
     googleAccessToken=null;localStorage.removeItem('google_access_token');
     const refreshed=await ensureGoogleToken(true);
     if(!refreshed)throw new Error('Impossible de rafraîchir le token Google');
@@ -1734,7 +1819,6 @@ function setGoogleIndicator(state){
   else if(state==='expired'){el.style.display='flex';el.innerHTML='⚠️ <span>Session expirée</span>';el.style.color='var(--err)';}
 }
 
-// Rafraîchissement proactif toutes les 45 min
 setInterval(function(){
   if(googleAccessToken && Date.now() > tokenExpiresAt-300000){
     ensureGoogleToken(true).then(function(ok){if(ok)console.log('Token Google rafraîchi proactivement');});
@@ -1816,9 +1900,7 @@ function findDuplicate(prenom,nom,email,entreprise){
   const nomLow=(nom||'').toLowerCase().trim();
   const entLow=(entreprise||'').toLowerCase().trim();
   return ST.prospects.find(p=>{
-    // Match par email (insensible casse)
     if(emailLow && p.email && p.email.toLowerCase().trim()===emailLow) return true;
-    // Match par nom + prénom + entreprise si pas d'email
     if(!emailLow && prenomLow && nomLow && entLow){
       return (p.prenom||'').toLowerCase().trim()===prenomLow &&
              (p.nom||'').toLowerCase().trim()===nomLow &&
@@ -1847,6 +1929,17 @@ function removeDuplicateWarning(containerId){
 }
 
 // ===================== UTILS =====================
+function insertSlotsInText(textarea, slots){
+  const currentText=textarea.value.trimEnd();
+  const slotsText='\n\nVoici mes disponibilités pour un échange de 20 minutes :\n'+slots.map(s=>`• ${s.full||s.date+' à '+s.time}`).join('\n');
+  const rdvKeywords=['20 minutes','20min','rendez-vous','disponible','créneau','échange'];
+  let insertIndex=-1;const lines=currentText.split('\n');
+  for(let i=0;i<lines.length;i++){if(rdvKeywords.some(kw=>lines[i].toLowerCase().includes(kw))){insertIndex=i;break;}}
+  let newText;
+  if(insertIndex!==-1){const before=lines.slice(0,insertIndex+1).join('\n');const after=lines.slice(insertIndex+1).join('\n').trimStart();newText=before+slotsText+'\n\n'+after;}
+  else{const sigIndex=currentText.lastIndexOf(SIGNATURE);if(sigIndex!==-1){const before=currentText.substring(0,sigIndex).trimEnd();newText=before+slotsText+'\n\n'+SIGNATURE;}else{newText=currentText+slotsText;}}
+  textarea.value=newText;
+}
 function v(id){return document.getElementById(id)?.value?.trim()||'';}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function toast(msg,type='success'){const el=document.getElementById('toast');document.getElementById('t-icon').textContent=type==='success'?'✓':type==='info'?'ℹ':'✕';document.getElementById('t-msg').textContent=msg;el.className=type;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3500);}
